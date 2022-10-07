@@ -1,5 +1,5 @@
 import './css/style.scss';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 
 const render = createRoot(document.getElementById('root'));
@@ -19,34 +19,28 @@ const shuffleArray = (array) => {
 const App = () => {
     const [num, setNum] = useState('');
     const [target, setTarget] = useState('');
-    const [result, setResult] = useState('');
     const [notice, setNotice] = useState('');
     const [record, setRecord] = useState([]);
-    const [A, setA] = useState(0);
-    const [B, setB] = useState(0);
+    const [inputDisabled, setInputDisabled] = useState(false);
     const NUM_INPUT_PLACEHOLDER = "4 different numbers";
+    const isMounted = useRef(false);
 
     useEffect(() => {
-        console.log(`component did mount`);
-        random4Digits();
-    }, []);
-
-    useEffect(() => {
-        console.log(`target update`);
-        noticeWording("題目已更新", 1500);
-        console.log(`target: ${target}`);
+        if (!isMounted.current) {
+            isMounted.current = true;
+        } else {
+            noticeWording("New round!", 1500);
+            console.log(`target: ${target}`);
+        }
     }, [target]);
 
     useEffect(() => {
-        console.log(`A B update`);
-        setResult(`${A} A - ${B} B`);
-        console.log(`store `, result);
-        setRecord([...record, result]);
-    }, [A, B]);
+        random4Digits();
+    }, []);
 
-    const noticeWording = (str, timeout) => {
+    const noticeWording = (str, timeout = false) => {
         setNotice(str);
-        setTimeout(() => setNotice(""), timeout);
+        if (timeout) setTimeout(() => setNotice(""), timeout);
     }
 
     const handleNumInput = (event) => {
@@ -56,13 +50,16 @@ const App = () => {
     const random4Digits = () => {
         const randomBaseNumbers = shuffleArray(baseNumbers);
         setTarget(randomBaseNumbers.slice(0, 4).join(''));
+        setRecord([]);
+        setNotice('');
+        setNum('');
+        setInputDisabled(false);
     };
 
     const compareAnswer = () => {
         let a = 0, b = 0;
-        const uniqueArray = [...new Set(num)];
         new Promise((resolve) => {
-            if (uniqueArray.length < 4) {
+            if ([...new Set(num)].length < 4) {
                 noticeWording("4 'different' number", 1500);
             } else {
                 num.split('').map((digit, index) => {
@@ -72,23 +69,29 @@ const App = () => {
                         b++;
                     }
                 });
-                setA(a);
-                setB(b);
+                const _res = `${num.split('').join(' ')}:${a} A ${b} B`;
+                setRecord([...record, _res]);
+                if (a === 4) {
+                    noticeWording("Win!");
+                    setInputDisabled(true);
+                }
             }
             resolve();
         }).then(() => setNum(''));
     };
 
     const RenderRecord = () => {
-        console.log("record: ", record);
         return (
-            <ul>
+            <ul className="ul-no-bullet">
                 {record.length > 0 &&
                     record.map((item, index) => {
-                        console.log(item, index);
                         return (
-                            <li key={index}>
-                                item
+                            <li key={index} className="record-item">
+                                <div className="item">
+                                    <div className="record-item-input">{item.split(":")[0]}</div>
+                                    <i className="record-item-arrow"></i>
+                                    <div className="record-item-result">{item.split(":")[1]}</div>
+                                </div>
                             </li>
                         );
                     })
@@ -102,6 +105,7 @@ const App = () => {
             <div className="input-block">
                 <input type="number"
                        value={num}
+                       disabled={inputDisabled}
                        onChange={handleNumInput}
                        onKeyUp={(event) => {
                            if (event.key === 'Enter') compareAnswer();
@@ -109,10 +113,9 @@ const App = () => {
                        placeholder={NUM_INPUT_PLACEHOLDER} />
             </div>
             <div className="button-area">
-                <button onClick={random4Digits} id="Generate" >Generate</button>
+                <button onClick={random4Digits} id="Generate" >Restart</button>
             </div>
             <div className="notice-block">{notice}</div>
-            <div className="result-block">{result}</div>
             <div className="record-block"><RenderRecord/></div>
         </div>
     );
