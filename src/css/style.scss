@@ -1,9 +1,17 @@
+body {
+  overflow: hidden;
+}
+
 .container {
   display: flex;
   flex-direction: column;
   height: 100vh;
   width: 100vw;
   align-items: center;
+  &.darken {
+    background-color: black;
+    opacity: 0.5;
+  }
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -44,6 +52,7 @@ input[type=number] {
   border-radius: 10px;
   border-width: 2px;
   background-color: #aed8ff;
+  cursor: pointer;
   &:hover {
     background-color: #9ccfff;
   }
@@ -116,5 +125,78 @@ input[type=number] {
   cursor: default;
   width: 90px;
   margin: auto;
+}
+
+.modal-alert {
+  width: 300px;
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  cursor: default;
+  top: 40%;
+  left: calc(50% - (300px / 2));
+}
+
+.alert-block {
+  z-index: 999;
+  background-color: #f3ebb6;
+  display: flex;
+  flex-direction: column;
+  height: inherit;
+  margin: auto;
+  padding: 8px;
+  border-radius: 4px;
+  border: 2px solid black;
+  box-shadow: 0 0 15px #000000;
+  &.close {
+    display: none;
+  }
+}
+
+.alert-header {
+  width: auto;
+  height: 15px;
+  padding: 2px 5px 5px 5px;
+  color: #363636;
+  border-bottom: 1px solid #5e5e5e;
+  text-align: center;
+}
+
+.alert-content {
+  width: auto;
+  margin: 10px 0 10px 0;
+  padding: 5px 18px 5px 18px;
+  word-wrap: break-word;
+  text-align: center;
+}
+
+.alert-footer {
+  width: auto;
+  height: 20px;
+  padding: 2px 5px;
+  text-align: center;
+}
+
+.next-round-btn {
+  border-radius: 4px;
+  background-color: #ffffff;
+  cursor: pointer;
+  &:hover {
+    background-color: #dcdcdc;
+  }
+}
+
+
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
 }
 

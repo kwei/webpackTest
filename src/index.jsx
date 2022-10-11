@@ -1,6 +1,7 @@
 import './css/style.scss';
 import React, {useEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
+import classNames from "classnames";
 
 const render = createRoot(document.getElementById('root'));
 
@@ -21,7 +22,9 @@ const App = () => {
     const [target, setTarget] = useState('');
     const [notice, setNotice] = useState('');
     const [record, setRecord] = useState([]);
-    const [inputDisabled, setInputDisabled] = useState(false);
+    const [isWin, setIsWin] = useState(false);
+    const [isAlertClosed, setAlertClosed] = useState(false);
+    const [inputDisabled, setInputDisabled] = useState(true);
     const NUM_INPUT_PLACEHOLDER = "4 different numbers";
     const isMounted = useRef(false);
 
@@ -35,10 +38,14 @@ const App = () => {
     }, [target]);
 
     useEffect(() => {
+        document.getElementById("overlay").style.display = isAlertClosed ? "none" : "block";
+    }, [isAlertClosed]);
+
+    useEffect(() => {
         random4Digits();
     }, []);
 
-    const noticeWording = (str, timeout = false) => {
+    const noticeWording = (str, timeout = 0) => {
         setNotice(str);
         if (timeout) setTimeout(() => setNotice(""), timeout);
     }
@@ -54,6 +61,8 @@ const App = () => {
         setNotice('');
         setNum('');
         setInputDisabled(false);
+        setIsWin(false);
+        setAlertClosed(true);
     };
 
     const compareAnswer = () => {
@@ -73,6 +82,8 @@ const App = () => {
                 setRecord([...record, _res]);
                 if (a === 4) {
                     noticeWording("Win!");
+                    setIsWin(true);
+                    setAlertClosed(false);
                     setInputDisabled(true);
                 }
             }
@@ -100,8 +111,40 @@ const App = () => {
         );
     };
 
+    const MiddleAlert = (props) => {
+        const data = props.data;
+        const alertBlockRef = useRef(null);
+        if (!isWin) return null;
+
+        useEffect(() => {
+            document.addEventListener("mousedown", (event) => {
+                if (alertBlockRef.current && !alertBlockRef.current.contains(event.target)) setAlertClosed(true);
+            });
+        }, [alertBlockRef]);
+
+        return (
+            <div className={classNames("alert-block", {"close": isAlertClosed})} ref={ref => alertBlockRef.current = ref}>
+                <div className="alert-header">{data.header}</div>
+                <div className="alert-content">{data.content}</div>
+                <div className="alert-footer">
+                    <button className="next-round-btn" value="Next Round" onClick={random4Digits}>Next Round</button>
+                </div>
+            </div>
+        );
+    };
+
     return (
-        <div className="container">
+        <div className={classNames("container")}>
+            <div id="overlay">
+                <div className="modal-alert">
+                    <MiddleAlert data={
+                        {
+                            "header": "Game Information",
+                            "content": "Win!"
+                        }
+                    }/>
+                </div>
+            </div>
             <div className="input-block">
                 <input type="number"
                        value={num}

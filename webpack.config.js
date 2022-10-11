@@ -12,7 +12,7 @@ module.exports = {
     entry: './src/index.jsx',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'static/js/[name].[hash].js'
+        filename: 'static/js/[name].[fullhash].js'
     },
     module: {
         rules: [
