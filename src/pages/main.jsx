@@ -1,17 +1,16 @@
-import React, {useEffect, useRef} from "react";
+import React, { useEffect, useRef } from "react";
 
-import {random4Digits} from "../module/random4Digits";
+import { random4Digits } from "../module/random4Digits";
 
 import Record from "../component/Record.jsx";
 import Alert from "../component/Alert.jsx";
-import {setNumber} from "../redux/numReducer";
-import store from "../redux/store";
-import {shallowEqual, useSelector} from "react-redux";
-import {setTarget} from "../redux/targetReducer";
-import {setNotice} from "../redux/noticeReducer";
-import {resetRecord, setRecord} from "../redux/recordReducer";
-import {changeAlertStatus, changeHighestScore, changeInputStatus, changeWinningStatus} from "../redux/statusReducer";
-import {Storage} from "../module/storage";
+import { setNumber } from "../redux/numberSlice";
+import { shallowEqual, useSelector, useDispatch } from "react-redux";
+import { setTarget} from "../redux/targetSlice";
+import { setNotice } from "../redux/noticeSlice";
+import { resetRecord, setRecord } from "../redux/recordSlice";
+import { changeAlertStatus, changeHighestScore, changeInputStatus, changeWinningStatus } from "../redux/statusSlice";
+import { Storage } from "../module/storage";
 const storage = Storage();
 /***
  * template: state = {
@@ -23,13 +22,14 @@ const storage = Storage();
  *         isWin,
  *         isAlertClosed,
  *         inputDisabled,
- *         isMounted
+ *         highestScore
  *     }
  * };
  ***/
 
 
 const MainPage = () => {
+    const dispatch = useDispatch();
     const num = useSelector(state => state.num.num, shallowEqual);
     const target = useSelector(state => state.target.target, shallowEqual);
     const notice = useSelector(state => state.notice.notice, shallowEqual);
@@ -59,27 +59,27 @@ const MainPage = () => {
 
     useEffect(() => {
         random4Digits((result) => {
-            store.dispatch(setTarget(result));
+            dispatch(setTarget(result));
         });
         resetStates();
     }, []);
 
     const noticeWording = (str, timeout = 0) => {
-        store.dispatch(setNotice(str));
-        if (timeout) setTimeout(() => store.dispatch(setNotice('')), timeout);
+        dispatch(setNotice(str));
+        if (timeout) setTimeout(() => dispatch(setNotice('')), timeout);
     }
 
     const handleNumInput = (event) => {
-        store.dispatch(setNumber(event.target.value.slice(0, 4)));
+        dispatch(setNumber(event.target.value.slice(0, 4)));
     };
 
     const resetStates = () => {
-        store.dispatch(resetRecord());
-        store.dispatch(setNotice(''));
-        store.dispatch(setNumber(''));
-        store.dispatch(changeInputStatus(false));
-        store.dispatch(changeWinningStatus(false));
-        store.dispatch(changeAlertStatus(true));
+        dispatch(resetRecord());
+        dispatch(setNotice(''));
+        dispatch(setNumber(''));
+        dispatch(changeInputStatus(false));
+        dispatch(changeWinningStatus(false));
+        dispatch(changeAlertStatus(true));
         count.current = 0;
     };
 
@@ -98,12 +98,12 @@ const MainPage = () => {
                     }
                 });
                 const _res = `${num.split('').join(' ')}:${a} A ${b} B`;
-                store.dispatch(setRecord(_res));
+                dispatch(setRecord(_res));
                 if (a === 4) {
                     noticeWording(`遊戲獲勝! 一共花了 ${count.current} 步。`);
-                    store.dispatch(changeWinningStatus(true));
-                    store.dispatch(changeAlertStatus(false));
-                    store.dispatch(changeInputStatus(true));
+                    dispatch(changeWinningStatus(true));
+                    dispatch(changeAlertStatus(false));
+                    dispatch(changeInputStatus(true));
 
                     const playingHistory = storage.getStorage('playingHistory');
                     if (playingHistory) storage.setStorage('playingHistory', playingHistory+count.current);
@@ -111,11 +111,11 @@ const MainPage = () => {
 
                     const currentHistory = storage.getStorage('playingHistory');
                     const highest = Math.min(...currentHistory.split('').map(str => Number(str))).toString();
-                    store.dispatch(changeHighestScore(highest));
+                    dispatch(changeHighestScore(highest));
                 }
             }
             resolve();
-        }).then(() => store.dispatch(setNumber('')));
+        }).then(() => dispatch(setNumber('')));
     };
 
 
@@ -151,7 +151,7 @@ const MainPage = () => {
             <div className="button-area">
                 <button onClick={() => {
                     random4Digits((result) => {
-                        store.dispatch(setTarget(result));
+                        dispatch(setTarget(result));
                     });
                     resetStates();
                 }} id="Generate" >重新開始</button>

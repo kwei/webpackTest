@@ -1,10 +1,10 @@
 import MiddleAlert from "./MiddleAlert.jsx";
 import React from "react";
-import store from "../redux/store";
+import { shallowEqual, useSelector } from "react-redux";
 
 
 const Alert = (props) => {
-    const isWin = store.getState().status.isWin;
+    const isWin = useSelector(state => state.status.isWin, shallowEqual);
     return(
         <div id="overlay">
             <div className="modal-alert">

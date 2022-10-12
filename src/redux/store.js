@@ -1,17 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import num from "./numReducer";
-import target from "./targetReducer";
-import notice from "./noticeReducer";
-import record from "./recordReducer";
-import status from "./statusReducer";
+import num from "./numberSlice";
+import target from "./targetSlice";
+import noticeReducer from "./noticeSlice";
+import record from "./recordSlice";
+import status from "./statusSlice";
 
 export default configureStore({
     reducer: {
-        num,
-        target,
-        notice,
-        record,
-        status
+        num: num,
+        target: target,
+        notice: noticeReducer,
+        record: record,
+        status: status,
     },
 });

@@ -1,4 +1,4 @@
-import {shuffleArray} from "./shuffleArray";
+import { shuffleArray } from "./shuffleArray";
 
 const baseNumbers = [...Array(10).keys()];
 

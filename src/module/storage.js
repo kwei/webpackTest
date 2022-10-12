@@ -1,5 +1,5 @@
+import { changeHighestScore } from "../redux/statusSlice";
 import store from "../redux/store";
-import {changeHighestScore} from "../redux/statusReducer";
 
 export const Storage =() => {
     const setStorage = (key, value) => {

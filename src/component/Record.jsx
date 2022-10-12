@@ -1,5 +1,5 @@
 import React from "react";
-import {shallowEqual, useSelector} from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 
 const RenderRecord = () => {
     const record = useSelector(state => state.record.record, shallowEqual);

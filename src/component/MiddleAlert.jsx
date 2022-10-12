@@ -1,18 +1,19 @@
-import React, {useEffect, useRef} from "react";
+import React, { useEffect, useRef } from "react";
 import classNames from "classnames";
-import {random4Digits} from "../module/random4Digits";
-import store from "../redux/store";
-import {setTarget} from "../redux/targetReducer";
-import {changeAlertStatus} from "../redux/statusReducer";
+import { random4Digits } from "../module/random4Digits";
+import { setTarget } from "../redux/targetSlice";
+import { changeAlertStatus } from "../redux/statusSlice";
+import {useSelector, useDispatch, shallowEqual} from "react-redux";
 
 const MiddleAlert = (props) => {
+    const dispatch = useDispatch();
     const data = props.data;
     const alertBlockRef = useRef(null);
-    const isAlertClosed = store.getState().status.isAlertClosed;
+    const isAlertClosed = useSelector(state => state.status.isAlertClosed, shallowEqual);
 
     useEffect(() => {
         document.addEventListener("mousedown", (event) => {
-            if (alertBlockRef.current && !alertBlockRef.current.contains(event.target)) store.dispatch(changeAlertStatus(true));
+            if (alertBlockRef.current && !alertBlockRef.current.contains(event.target)) dispatch(changeAlertStatus(true));
         });
     }, [alertBlockRef]);
 
@@ -23,7 +24,7 @@ const MiddleAlert = (props) => {
             <div className="alert-footer">
                 <button className="next-round-btn" value="Next Round" onClick={() => {
                     random4Digits((result) => {
-                        store.dispatch(setTarget(result));
+                        dispatch(setTarget(result));
                     });
                     props.resetStates();
                 }}>重新開始</button>
