@@ -26,7 +26,7 @@ const MiddleAlert = (props) => {
                         store.dispatch(setTarget(result));
                     });
                     props.resetStates();
-                }}>Next Round</button>
+                }}>重新開始</button>
             </div>
         </div>
     );

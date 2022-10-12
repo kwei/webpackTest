@@ -2,11 +2,13 @@
 const CHANGE_WIN_STATUS = "CHANGE_WIN_STATUS";
 const CHANGE_ALERT_STATUS = "CHANGE_ALERT_STATUS";
 const CHANGE_INPUT_STATUS = "CHANGE_INPUT_STATUS";
+const CHANGE_HIGHEST_SCORE = "CHANGE_HIGHEST_SCORE";
 
 const initialState = {
     isWin: false,
     isAlertClosed: false,
-    inputDisabled: false
+    inputDisabled: false,
+    highestScore: '尚無紀錄'
 };
 
 const reducer = (state = initialState, action = {}) => {
@@ -25,6 +27,11 @@ const reducer = (state = initialState, action = {}) => {
             return {
                 ...state,
                 inputDisabled: action.inputDisabled
+            };
+        case CHANGE_HIGHEST_SCORE:
+            return {
+                ...state,
+                highestScore: action.highestScore
             };
         default:
             return state;
@@ -51,5 +58,12 @@ export const changeInputStatus = (inputDisabled) => {
     return {
         type: CHANGE_INPUT_STATUS,
         inputDisabled: inputDisabled,
+    };
+};
+
+export const changeHighestScore = (highestScore) => {
+    return {
+        type: CHANGE_HIGHEST_SCORE,
+        highestScore: highestScore,
     };
 };

@@ -9,12 +9,7 @@ const Alert = (props) => {
         <div id="overlay">
             <div className="modal-alert">
                 {isWin && <MiddleAlert
-                    data={
-                        {
-                            "header": "Game Information",
-                            "content": "Win!"
-                        }
-                    }
+                    data={props.msg}
                     resetStates={props.resetStates}/>
                 }
             </div>

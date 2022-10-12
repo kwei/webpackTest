@@ -1,5 +1,6 @@
 body {
   overflow: hidden;
+  font-family: arial,'Microsoft JhengHei','微軟正黑體',sans-serif !important;
 }
 
 .container {
@@ -34,11 +35,40 @@ input[type=number] {
   padding: 10px 15px;
 }
 
+.rule-block {
+  width: 470px;
+  border: 2px solid black;
+  margin: 30px 0 10px 0;
+  padding: 8px;
+  border-radius: 4px;
+  box-shadow: 2px 2px 5px #7c7c7c;
+}
+
+.rules {
+  width: inherit;
+  word-wrap: break-word;
+}
+
 .input-block {
   max-width: calc(25vw);
   height: 30px;
   margin: 8px;
   text-align: center;
+}
+
+.currentHighestScore {
+  font-size: 10px;
+  padding: 2px;
+  text-align: center;
+}
+
+.clearStorage {
+  cursor: pointer;
+  text-decoration: underline;
+  margin: 0 0 0 5px;
+  &:hover {
+    color: #002bc7;
+  }
 }
 
 .button-area {
@@ -156,7 +186,7 @@ input[type=number] {
 .alert-header {
   width: auto;
   height: 15px;
-  padding: 2px 5px 5px 5px;
+  padding: 2px 5px 12px 5px;
   color: #363636;
   border-bottom: 1px solid #5e5e5e;
   text-align: center;
@@ -172,9 +202,10 @@ input[type=number] {
 
 .alert-footer {
   width: auto;
-  height: 20px;
+  height: auto;
   padding: 2px 5px;
   text-align: center;
+  margin: 10px 0 0 0;
 }
 
 .next-round-btn {
