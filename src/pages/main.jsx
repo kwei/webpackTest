@@ -141,6 +141,7 @@ const MainPage = () => {
                            if (event.key === 'Enter') compareAnswer();
                        }}
                        placeholder={NUM_INPUT_PLACEHOLDER} />
+                <i className="enter"></i>
             </div>
             <div className="currentHighestScore">
                 {"目前最快步數："+highestScore}

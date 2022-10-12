@@ -1,13 +1,13 @@
 body {
-  overflow: hidden;
+  overflow: auto;
   font-family: arial,'Microsoft JhengHei','微軟正黑體',sans-serif !important;
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   align-items: center;
   &.darken {
     background-color: black;
@@ -37,6 +37,7 @@ input[type=number] {
 
 .rule-block {
   width: 470px;
+  max-width: 90%;
   border: 2px solid black;
   margin: 30px 0 10px 0;
   padding: 8px;
@@ -50,7 +51,7 @@ input[type=number] {
 }
 
 .input-block {
-  max-width: calc(25vw);
+  max-width: 50%;
   height: 30px;
   margin: 8px;
   text-align: center;
@@ -99,6 +100,7 @@ input[type=number] {
 }
 
 .record-block {
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   padding: 5px;
@@ -159,6 +161,7 @@ input[type=number] {
 
 .modal-alert {
   width: 300px;
+  max-width: 100%;
   max-height: 200px;
   overflow-y: auto;
   position: absolute;
