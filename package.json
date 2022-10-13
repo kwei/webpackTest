@@ -42,8 +42,12 @@
     "@mui/icons-material": "^5.10.9",
     "@reduxjs/toolkit": "^1.8.6",
     "classnames": "^2.3.2",
+    "fbemitter": "^3.0.0",
+    "firebase": "^9.12.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^8.0.4"
+    "react-icons": "^4.4.0",
+    "react-redux": "^8.0.4",
+    "ws": "^8.9.0"
   }
 }

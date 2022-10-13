@@ -18,19 +18,14 @@ const MiddleAlert = (props) => {
     }, [alertBlockRef]);
 
     return (
-        <div className={classNames("alert-block", {"close": isAlertClosed})} ref={ref => alertBlockRef.current = ref}>
+        <div className={classNames("alert-block", {"close": isAlertClosed})} ref={ref => alertBlockRef.current = ref} style={{backgroundColor: props.bgColor}}>
             <div className="alert-header">{data.header}</div>
             <div className="alert-content">{data.content}</div>
             <div className="alert-footer">
-                <button className="next-round-btn" value="Next Round" onClick={() => {
-                    random4Digits((result) => {
-                        dispatch(setTarget(result));
-                    });
-                    props.resetStates();
-                }}>重新開始</button>
+                <button className="next-round-btn" value="Next Round" onClick={() => props.action()}>{props.actionName}</button>
             </div>
         </div>
     );
 };
 
-export default MiddleAlert;
+export default React.memo(MiddleAlert);

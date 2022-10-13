@@ -22,4 +22,4 @@ const RenderRecord = () => {
     );
 };
 
-export default RenderRecord;
+export default React.memo(RenderRecord);

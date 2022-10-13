@@ -8,13 +8,17 @@ const Alert = (props) => {
     return(
         <div id="overlay">
             <div className="modal-alert">
-                {isWin && <MiddleAlert
-                    data={props.msg}
-                    resetStates={props.resetStates}/>
+                {isWin &&
+                    <MiddleAlert
+                        data={props.msg}
+                        bgColor={props.bgColor}
+                        actionName={props.actionName}
+                        action={props.action}
+                    />
                 }
             </div>
         </div>
     );
 };
 
-export default Alert;
+export default React.memo(Alert);

@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from "react";
-
+import { GrReturn } from "react-icons/gr";
 import { random4Digits } from "../module/random4Digits";
 
 import Record from "../component/Record.jsx";
 import Alert from "../component/Alert.jsx";
+import Notification from "../component/Notification.jsx";
 import { setNumber } from "../redux/numberSlice";
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
 import { setTarget} from "../redux/targetSlice";
@@ -11,21 +12,8 @@ import { setNotice } from "../redux/noticeSlice";
 import { resetRecord, setRecord } from "../redux/recordSlice";
 import { changeAlertStatus, changeHighestScore, changeInputStatus, changeWinningStatus } from "../redux/statusSlice";
 import { Storage } from "../module/storage";
+import { setUser } from "../redux/userSlice";
 const storage = Storage();
-/***
- * template: state = {
- *     num,
- *     target,
- *     notice,
- *     record,
- *     status = {
- *         isWin,
- *         isAlertClosed,
- *         inputDisabled,
- *         highestScore
- *     }
- * };
- ***/
 
 
 const MainPage = () => {
@@ -33,6 +21,7 @@ const MainPage = () => {
     const num = useSelector(state => state.num.num, shallowEqual);
     const target = useSelector(state => state.target.target, shallowEqual);
     const notice = useSelector(state => state.notice.notice, shallowEqual);
+    const playerName = useSelector(state => state.user.user, shallowEqual);
     const {isAlertClosed, inputDisabled, highestScore} = useSelector(state => state.status, shallowEqual);
     const NUM_INPUT_PLACEHOLDER = "請輸入 4 個不重複的數字";
     const RULES = [
@@ -58,10 +47,14 @@ const MainPage = () => {
     }, [isAlertClosed]);
 
     useEffect(() => {
-        random4Digits((result) => {
-            dispatch(setTarget(result));
-        });
-        resetStates();
+        newRound();
+        const _playerName = storage.getStorage('playerName');
+        if (!_playerName) {
+            const name = window.prompt("請輸入您的遊玩名稱(預設：匿名玩家)", "匿名玩家");
+            if (name === null || "") name = "匿名玩家";
+            storage.setStorage('playerName', name);
+            dispatch(setUser(name));
+        } else dispatch(setUser(_playerName));
     }, []);
 
     const noticeWording = (str, timeout = 0) => {
@@ -118,13 +111,24 @@ const MainPage = () => {
         }).then(() => dispatch(setNumber('')));
     };
 
+    const newRound = () => {
+        random4Digits((result) => {
+            dispatch(setTarget(result));
+        });
+        resetStates();
+    };
 
     return(
         <>
-            <Alert resetStates={resetStates} msg={{
-                "header": "遊戲獲勝",
-                "content": `一共花了 ${count.current} 步。`
-            }}/>
+            <Notification/>
+            <Alert
+                msg={{
+                    "header": "遊戲獲勝",
+                    "content": `一共花了 ${count.current} 步。`
+                }}
+                bgColor="#f3ebb6"
+                actionName="重新一局" action={() => newRound()}
+            />
             <div className="rule-block">
                 <span className="rules">
                     {RULES.map((rule, index) => {
@@ -141,21 +145,19 @@ const MainPage = () => {
                            if (event.key === 'Enter') compareAnswer();
                        }}
                        placeholder={NUM_INPUT_PLACEHOLDER} />
-                <i className="enter"></i>
+                <i className="enter" onClick={() => compareAnswer()}><GrReturn/></i>
             </div>
             <div className="currentHighestScore">
-                {"目前最快步數："+highestScore}
+                {playerName+"，您目前最快步數："+highestScore}
                 <a className="clearStorage" onClick={() => {
-                    storage.removeStorage("playingHistory");
+                    if (window.confirm('確定要清除遊玩紀錄?')) {
+                        storage.removeStorage("playingHistory");
+                        dispatch(changeAlertStatus(true));
+                    }
                 }}>清除紀錄</a>
             </div>
             <div className="button-area">
-                <button onClick={() => {
-                    random4Digits((result) => {
-                        dispatch(setTarget(result));
-                    });
-                    resetStates();
-                }} id="Generate" >重新開始</button>
+                <button onClick={() => newRound()} id="Generate" >重新開始</button>
             </div>
             <div className="notice-block">{notice}</div>
             <div className="record-block"><Record/></div>
@@ -163,4 +165,4 @@ const MainPage = () => {
     );
 };
 
-export default MainPage;
+export default React.memo(MainPage);
