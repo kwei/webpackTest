@@ -3,6 +3,7 @@ import {fetchToken, onMessageListener} from "../module/firebase";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import classNames from "classnames";
 import { setToken } from "../redux/firebaseSlice";
+import { MdCircleNotifications } from "react-icons/md";
 
 
 const Notification = () => {
@@ -34,7 +35,7 @@ const Notification = () => {
 
     return(
         <div className={classNames("notification", {"show": show})}>
-            <div className="notification-title">{msg?.notification?.title}:</div>
+            <i className="notification-icon"><MdCircleNotifications size={30}/></i>
             <div className="notification-body">{msg?.notification?.body}</div>
         </div>
     );
