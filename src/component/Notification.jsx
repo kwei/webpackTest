@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {fetchToken, onMessageListener, subscribe} from "../module/firebase";
+import {fetchToken, onMessageListener} from "../module/firebase";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import classNames from "classnames";
 import { setToken } from "../redux/firebaseSlice";
