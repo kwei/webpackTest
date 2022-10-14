@@ -14,7 +14,6 @@ const Notification = () => {
     useEffect(() => {
         fetchToken().then((token) => {
             dispatch(setToken(token));
-            subscribe(token, "test");
         });
     }, []);
 
