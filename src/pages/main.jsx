@@ -49,12 +49,8 @@ const MainPage = () => {
     useEffect(() => {
         newRound();
         const _playerName = storage.getStorage('playerName');
-        if (!_playerName) {
-            const name = window.prompt("請輸入您的遊玩名稱(預設：匿名玩家)", "匿名玩家");
-            if (name === null || "") name = "匿名玩家";
-            storage.setStorage('playerName', name);
-            dispatch(setUser(name));
-        } else dispatch(setUser(_playerName));
+        if (!_playerName) askName();
+        else dispatch(setUser(_playerName));
     }, []);
 
     const noticeWording = (str, timeout = 0) => {
@@ -76,10 +72,22 @@ const MainPage = () => {
         count.current = 0;
     };
 
+    const checkInputs = () => {
+        let isValid = true;
+        if ([...new Set(num)].length < 4) {
+            isValid = false;
+        } else {
+            num.split('').map(value => {
+                if (value.charCodeAt(0) < 48 || value.charCodeAt(0) > 57) isValid = false;
+            });
+        }
+        return isValid;
+    };
+
     const compareAnswer = () => {
         let a = 0, b = 0;
         new Promise((resolve) => {
-            if ([...new Set(num)].length < 4) {
+            if (!checkInputs()) {
                 noticeWording("請輸入 4 個'不重複'的數字", 1500);
             } else {
                 count.current++;
@@ -118,6 +126,19 @@ const MainPage = () => {
         resetStates();
     };
 
+    const askName = () => {
+        const name = window.prompt("請輸入您的遊玩名稱(預設：匿名玩家)", "匿名玩家");
+        if (name === null || "") name = "匿名玩家";
+        storage.setStorage('playerName', name);
+        dispatch(setUser(name));
+    };
+
+    const Player = () => {
+        return (
+            <span className="playerName" onClick={() => askName()}>{playerName}</span>
+        );
+    };
+
     return(
         <>
             <Notification/>
@@ -148,7 +169,7 @@ const MainPage = () => {
                 <i className="enter" onClick={() => compareAnswer()}><GrReturn/></i>
             </div>
             <div className="currentHighestScore">
-                {playerName+"，您目前最快步數："+highestScore}
+                <Player/> {"，您目前最快步數：" + highestScore }
                 <a className="clearStorage" onClick={() => {
                     if (window.confirm('確定要清除遊玩紀錄?')) {
                         storage.removeStorage("playingHistory");
