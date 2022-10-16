@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import classNames from "classnames";
-import { random4Digits } from "../module/random4Digits";
-import { setTarget } from "../redux/targetSlice";
 import { changeAlertStatus } from "../redux/statusSlice";
 import {useSelector, useDispatch, shallowEqual} from "react-redux";
 

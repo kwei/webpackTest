@@ -1,5 +1,7 @@
 const path = require('path');
 
+require('dotenv').config();
+
 // plugin
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');

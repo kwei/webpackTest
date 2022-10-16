@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { GrReturn } from "react-icons/gr";
-import { random4Digits } from "../module/random4Digits";
 
 import Record from "../component/Record.jsx";
 import Alert from "../component/Alert.jsx";
@@ -13,7 +12,10 @@ import { resetRecord, setRecord } from "../redux/recordSlice";
 import { changeAlertStatus, changeHighestScore, changeInputStatus, changeWinningStatus } from "../redux/statusSlice";
 import { Storage } from "../module/storage";
 import { setUser } from "../redux/userSlice";
+import {Logger} from "../module/logger";
 const storage = Storage();
+
+const logger = Logger({className: "main"});
 
 
 const MainPage = () => {
@@ -34,24 +36,26 @@ const MainPage = () => {
     const count = useRef(0);
 
     useEffect(() => {
-        if (!isMounted.current) {
-            isMounted.current = true;
-        } else {
-            noticeWording("新的一局!", 1500);
-            console.log(`target: ${target}`);
-        }
+        logger.debug("1", 2, {0:"3"}, [4]);
+
+        logger.verbose("1", 2, [4]);
+
+        logger.debug("1", 2, {0:"3"});
+        const _playerName = storage.getStorage('playerName');
+        if (!_playerName) askName();
+        else dispatch(setUser(_playerName));
+    }, []);
+
+    useEffect(() => {
+        resetStates()
+        noticeWording("新的一局!", 1500);
+        console.log(`target: ${target}`);
     }, [target]);
 
     useEffect(() => {
         document.getElementById("overlay").style.display = isAlertClosed ? "none" : "block";
     }, [isAlertClosed]);
 
-    useEffect(() => {
-        newRound();
-        const _playerName = storage.getStorage('playerName');
-        if (!_playerName) askName();
-        else dispatch(setUser(_playerName));
-    }, []);
 
     const noticeWording = (str, timeout = 0) => {
         dispatch(setNotice(str));
@@ -120,14 +124,11 @@ const MainPage = () => {
     };
 
     const newRound = () => {
-        random4Digits((result) => {
-            dispatch(setTarget(result));
-        });
-        resetStates();
+        dispatch(setTarget());
     };
 
     const askName = () => {
-        const name = window.prompt("請輸入您的遊玩名稱(預設：匿名玩家)", "匿名玩家");
+        let name = window.prompt("請輸入您的遊玩名稱(預設：匿名玩家)", "匿名玩家");
         if (name === null || "") name = "匿名玩家";
         storage.setStorage('playerName', name);
         dispatch(setUser(name));
