@@ -1,13 +1,19 @@
-const DEBUG = true;
-const VERBOSE = true;
-const TIME = true;
-// const DEBUG = process.env.REACT_APP_DEBUG;
-// const VERBOSE = process.env.REACT_APP_VERBOSE;
-// const TIME = process.env.REACT_APP_TIME;
+import { env } from '../../env.js';
+const DEBUG = env.LOG.DEBUG;
+const VERBOSE = env.LOG.VERBOSE;
+const TIME = env.LOG.TIME;
 
-const INFO_COLOR = "lightblue";
-const DEBUG_COLOR = "white";
+const INFO_COLOR = "#118AB2";
+const WARN_COLOR = "#FFD166";
+const SUCCESS_COLOR = "#06D6A0";
+const DEBUG_COLOR = "#FFFFFF";
+const ERROR_COLOR = "#EF476F";
 const DEFAULT_COLOR = "unset";
+
+const trace = () => {
+    const errStack = new Error().stack.split('\n').slice(1).join('\n');
+    console.log(`%c${errStack}%c`, `color: ${WARN_COLOR}`, `color: ${DEFAULT_COLOR}`);
+};
 
 export const Logger = (props) => {
     const { className } = props;
@@ -27,7 +33,16 @@ export const Logger = (props) => {
         },
         info: (...args) => {
             _verbose(...args);
-        }
+        },
+        success: (...args) => {
+            let now = new Date();
+            console.log(`${TIME ? now.toISOString() + " " : "" }%c[SUCCESS] ${className}: ${args}%c`, `color: ${SUCCESS_COLOR}`, `color: ${DEFAULT_COLOR}`);
+        },
+        error: (...args) => {
+            let now = new Date();
+            console.log(`${TIME ? now.toISOString() + " " : "" }%c[ERROR] ${className}: ${args}%c`, `color: ${ERROR_COLOR}`, `color: ${DEFAULT_COLOR}`);
+            trace();
+        },
     }
 
 }

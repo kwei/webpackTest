@@ -4,19 +4,17 @@ import { shallowEqual, useSelector } from "react-redux";
 
 
 const Alert = (props) => {
-    const isWin = useSelector(state => state.status.isWin, shallowEqual);
+    const isWin = useSelector(state => state.statusReducer.isWin, shallowEqual);
     return(
-        <div id="overlay">
-            <div className="modal-alert">
-                {isWin &&
-                    <MiddleAlert
-                        data={props.msg}
-                        bgColor={props.bgColor}
-                        actionName={props.actionName}
-                        action={props.action}
-                    />
-                }
-            </div>
+        <div className="modal-alert">
+            {isWin &&
+                <MiddleAlert
+                    data={props.msg}
+                    bgColor={props.bgColor}
+                    actionName={props.actionName}
+                    action={props.action}
+                />
+            }
         </div>
     );
 };

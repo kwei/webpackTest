@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const defaultState = {
-    notice: ''
+    msg: ""
 };
 
 export const noticeSlice = createSlice({
@@ -10,14 +10,22 @@ export const noticeSlice = createSlice({
     reducers: {
         setNotice: {
             reducer: (state,action) => {
-                state.notice = action.payload;
+                state.msg = action.payload;
             },
             prepare: (notice) => {
                 return {payload: notice};
             }
         },
+        resetNotice: {
+            reducer: (state,action) => {
+                state.msg = action.payload;
+            },
+            prepare: () => {
+                return {payload: ""};
+            }
+        },
     }
 });
 
-export const { setNotice } = noticeSlice.actions;
+export const { setNotice, resetNotice } = noticeSlice.actions;
 export default noticeSlice.reducer;

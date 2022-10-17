@@ -2,7 +2,7 @@ import React from "react";
 import { shallowEqual, useSelector } from "react-redux";
 
 const RenderRecord = () => {
-    const record = useSelector(state => state.record.record, shallowEqual);
+    const record = useSelector(state => state.recordReducer.record, shallowEqual);
     return (
         <ul className="ul-no-bullet">
             {record.length > 0 &&

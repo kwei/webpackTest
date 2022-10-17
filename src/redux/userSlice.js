@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const defaultState = {
-    user: null
+    name: "匿名玩家"
 };
 
 export const userSlice = createSlice({
@@ -10,22 +10,14 @@ export const userSlice = createSlice({
     reducers: {
         setUser: {
             reducer: (state,action) => {
-                state.user = action.payload;
+                state.name = action.payload;
             },
             prepare: (user) => {
                 return {payload: user};
             }
-        },
-        resetUser: {
-            reducer: (state,action) => {
-                state.user = action.payload;
-            },
-            prepare: () => {
-                return {payload: null};
-            }
-        },
+        }
     }
 });
 
-export const { setUser, resetUser } = userSlice.actions;
+export const { setUser } = userSlice.actions;
 export default userSlice.reducer;

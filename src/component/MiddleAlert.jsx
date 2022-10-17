@@ -7,7 +7,7 @@ const MiddleAlert = (props) => {
     const dispatch = useDispatch();
     const data = props.data;
     const alertBlockRef = useRef(null);
-    const isAlertClosed = useSelector(state => state.status.isAlertClosed, shallowEqual);
+    const isAlertClosed = useSelector(state => state.statusReducer.isAlertClosed, shallowEqual);
 
     useEffect(() => {
         document.addEventListener("mousedown", (event) => {

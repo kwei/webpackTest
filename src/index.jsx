@@ -7,6 +7,8 @@ import MainPage from "./pages/main.jsx";
 
 const render = createRoot(document.getElementById('root'));
 
+import { channel } from './module/messageChannel';
+
 const App = () => {
     return (
         <Provider store={store}>

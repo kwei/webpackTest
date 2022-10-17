@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const defaultState = {
-    num: ''
+    num: ""
 };
 
 export const numberSlice = createSlice({
@@ -16,8 +16,16 @@ export const numberSlice = createSlice({
                 return {payload: num};
             }
         },
+        resetNumber: {
+            reducer: (state,action) => {
+                state.num = action.payload;
+            },
+            prepare: () => {
+                return {payload: ""};
+            }
+        },
     }
 });
 
-export const { setNumber } = numberSlice.actions;
+export const { setNumber, resetNumber } = numberSlice.actions;
 export default numberSlice.reducer;

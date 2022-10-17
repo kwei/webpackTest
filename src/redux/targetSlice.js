@@ -3,7 +3,7 @@ import {shuffleArray} from "../module/shuffleArray";
 
 const baseNumbers = [...Array(10).keys()];
 const defaultState = {
-    target: shuffleArray(baseNumbers).slice(0, 4).join('')
+    num: shuffleArray(baseNumbers).slice(0, 4).join('')
 };
 
 export const targetSlice = createSlice({
@@ -12,7 +12,7 @@ export const targetSlice = createSlice({
     reducers: {
         setTarget: {
             reducer: (state,action) => {
-                state.target = action.payload;
+                state.num = action.payload;
             },
             prepare: () => {
                 return {payload: shuffleArray(baseNumbers).slice(0, 4).join('')};
