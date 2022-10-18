@@ -2,19 +2,26 @@ import React, {useEffect, useRef, useState} from "react";
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
 import { GrReturn } from "react-icons/gr";
 
-import Record from "../component/Record/Record.jsx";
-import Alert from "../component/Alert/Alert.jsx";
-import Player from "../component/Player/Player.jsx";
-import Notification from "../component/Notification/Notification.jsx";
+/***
+ * https://blog.logrocket.com/lazy-loading-components-in-react-16-6-6cea535c0b52/
+ * Use React.lazy() to dynamically import components;
+ * Use <Suspense/> to handle the fallback, such as a loading component;
+ * Use <ErrorBoundary> to handle error rendering React.lazy() component.
+ ***/
+const Record = React.lazy(() => import("../component/Record/Record.jsx"));
+const Alert = React.lazy(() => import("../component/Alert/Alert.jsx"));
+const Player = React.lazy(() => import("../component/Player/Player.jsx"));
+const Notification = React.lazy(() => import("../component/Notification/Notification.jsx"));
+
 import { resetRecord, setRecord, setHighestScore, resetHighestScore } from "../component/Record/recordSlice";
 import { setAlertVisible } from "../component/Alert/alertSlice";
 import { initUser } from "../component/Player/userSlice";
-import { setTarget } from "../redux/targetSlice";
 
 import { Storage } from "../module/storage";
 import { Logger } from "../module/logger";
 import { eventEmitter } from "../module/eventEmitter";
 import { askPlayerName } from "../module/askPlayerName";
+import {shuffleArray} from "../module/shuffleArray";
 
 const storage = Storage();
 const logger = Logger({className: "main"});
@@ -27,6 +34,10 @@ const RULES = [
     "目標為獲得 4A。"
 ];
 
+const baseNumbers = [...Array(10).keys()];
+const initTarget = shuffleArray(baseNumbers).slice(0, 4).join('');
+logger.verbose(`Init target number: ${initTarget}`);
+
 const MainPage = () => {
     const dispatch = useDispatch();
 
@@ -34,7 +45,7 @@ const MainPage = () => {
     const [num, setNum] = useState("");
     const [isWin, setIsWin] = useState(false);
     const [inputEditable, setInputEditable] = useState(true);
-    const target = useSelector(state => state.targetReducer.num, shallowEqual);
+    const [target, setTarget] = useState(initTarget);
     const highestScore = useSelector(state => state.recordReducer.highestScore, shallowEqual);
     const isAlertVisible = useSelector(state => state.alertReducer.isAlertVisible, shallowEqual);
     const count = useRef(0);
@@ -135,7 +146,7 @@ const MainPage = () => {
 
     const newRound = () => {
         logger.info("New round");
-        dispatch(setTarget());
+        setTarget(shuffleArray(baseNumbers).slice(0, 4).join(''));
     };
 
     return(
