@@ -173,7 +173,7 @@ const MainPage = () => {
             <div className="input-block">
                 <input type="number"
                        value={num}
-                       disabled={inputEditable}
+                       disabled={!inputEditable}
                        onChange={handleNumInput}
                        onKeyUp={(event) => {
                            if (event.key === 'Enter') compareAnswer();
