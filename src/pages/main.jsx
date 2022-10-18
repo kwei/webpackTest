@@ -187,7 +187,7 @@ const MainPage = () => {
                     if (window.confirm('確定要清除遊玩紀錄?')) {
                         logger.info("Remove playing record");
                         storage.removeStorage("playingHistory");
-                        dispatch(changeAlertStatus(true));
+                        dispatch(resetHighestScore());
                     }
                 }}>清除紀錄</a>
             </div>
