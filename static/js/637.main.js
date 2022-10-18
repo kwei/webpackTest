@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwebpacktest=self.webpackChunkwebpacktest||[]).push([[637],{637:(e,n,t)=>{t.r(n),t.d(n,{default:()=>s});var a=t(294),r=t(660),c=t(743),u=t(207);const s=function(){var e=(0,c.I0)(),n=(0,c.v9)((function(e){return e.userReducer.name}),c.wU);return a.createElement("span",{className:"playerName",onClick:function(){return e((0,u.av)((0,r.v)()))}},n)}}}]);
