@@ -8,7 +8,7 @@ import Player from "../component/Player/Player.jsx";
 import Notification from "../component/Notification/Notification.jsx";
 import { resetRecord, setRecord, setHighestScore, resetHighestScore } from "../component/Record/recordSlice";
 import { setAlertVisible } from "../component/Alert/alertSlice";
-import { setUser } from "../component/Player/userSlice";
+import { initUser } from "../component/Player/userSlice";
 import { setTarget } from "../redux/targetSlice";
 
 import { Storage } from "../module/storage";
@@ -18,6 +18,14 @@ import { askPlayerName } from "../module/askPlayerName";
 
 const storage = Storage();
 const logger = Logger({className: "main"});
+
+const NUM_INPUT_PLACEHOLDER = "請輸入 4 個不重複的數字";
+const RULES = [
+    "這是幾 A 幾 B 的小遊戲，請輸入 4 個不重複的數字，從 0 到 9。",
+    "程式會自動產生隨機題目，若輸入的數字與題目相對應位置的數字相符，則會得到 A；",
+    "若輸入的數字與題目不同位置的數字相符，則會得到 B。",
+    "目標為獲得 4A。"
+];
 
 const MainPage = () => {
     const dispatch = useDispatch();
@@ -29,28 +37,22 @@ const MainPage = () => {
     const target = useSelector(state => state.targetReducer.num, shallowEqual);
     const highestScore = useSelector(state => state.recordReducer.highestScore, shallowEqual);
     const isAlertVisible = useSelector(state => state.alertReducer.isAlertVisible, shallowEqual);
-    const NUM_INPUT_PLACEHOLDER = "請輸入 4 個不重複的數字";
-    const RULES = [
-        "這是幾 A 幾 B 的小遊戲，請輸入 4 個不重複的數字，從 0 到 9。",
-        "程式會自動產生隨機題目，若輸入的數字與題目相對應位置的數字相符，則會得到 A；",
-        "若輸入的數字與題目不同位置的數字相符，則會得到 B。",
-        "目標為獲得 4A。"
-    ];
-    const isMounted = useRef(false);
     const count = useRef(0);
+    const isMounted = useRef(false);
     let overlayRef = useRef(null);
 
     useEffect(() => {
         logger.info("Initialize player's name");
-        const _playerName = storage.getStorage('playerName');
-        if (!_playerName) dispatch(setUser(askPlayerName()));
-        else dispatch(setUser(_playerName));
+        dispatch(initUser());
     }, []);
 
     useEffect(() => {
-        resetStates()
-        noticeWording("新的一局!", 1500);
-        logger.verbose(`New target number: ${target}`);
+        if (isMounted.current) {
+            resetStates()
+            noticeWording("新的一局!", 1500);
+            logger.verbose(`New target number: ${target}`);
+        }
+        isMounted.current = true;
     }, [target]);
 
     useEffect(() => {
@@ -71,7 +73,7 @@ const MainPage = () => {
         logger.info("Reset states");
         setNotice("");
         setNum("");
-        setInputEditable(false);
+        setInputEditable(true);
         setIsWin(false);
         dispatch(resetRecord());
         dispatch(setAlertVisible(false));

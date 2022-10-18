@@ -1,9 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {shuffleArray} from "../module/shuffleArray";
+import { shuffleArray } from "../module/shuffleArray";
+import { Logger } from "../module/logger";
+
+const logger = Logger({className: "targetSlice"});
 
 const baseNumbers = [...Array(10).keys()];
+const initTarget = shuffleArray(baseNumbers).slice(0, 4).join('');
+logger.verbose(`New target number: ${initTarget}`);
+
 const defaultState = {
-    num: shuffleArray(baseNumbers).slice(0, 4).join('')
+    num: initTarget
 };
 
 export const targetSlice = createSlice({

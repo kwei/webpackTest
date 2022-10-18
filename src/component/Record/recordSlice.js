@@ -1,8 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { Storage } from "../../module/storage";
+
+const storage = Storage();
+
+const getPlayingHistory = () => {
+    const playingHistory = storage.getStorage('playingHistory');
+    if (playingHistory) {
+        return Math.min(...playingHistory.split('').map(str => Number(str))).toString();
+    } else return "尚無紀錄";
+};
 
 const defaultState = {
     record: [],
-    highestScore: "尚無紀錄"
+    highestScore: getPlayingHistory()
 };
 
 export const recordSlice = createSlice({
