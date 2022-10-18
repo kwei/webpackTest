@@ -26,8 +26,8 @@ export const userSlice = createSlice({
                     let name = window.prompt("請輸入您的遊玩名稱(預設：匿名玩家)", "匿名玩家");
                     if (name === null || name.length === 0) {
                         name = "匿名玩家";
-                        storage.setStorage('playerName', name);
                     } else state.name = name;
+                    storage.setStorage('playerName', name);
                 } else state.name = _playerName;
             },
             prepare: () => {
