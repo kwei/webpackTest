@@ -77,7 +77,7 @@ const MainPage = () => {
     }
 
     const handleNumInput = (event) => {
-        setNumber(event.target.value.slice(0, 4));
+        setNum(event.target.value.slice(0, 4));
     };
 
     const resetStates = () => {
@@ -140,7 +140,7 @@ const MainPage = () => {
             }
             resolve();
         }).then(() => {
-            setNumber("");
+            setNum("");
         });
     };
 

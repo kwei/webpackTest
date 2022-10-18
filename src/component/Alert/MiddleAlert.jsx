@@ -16,7 +16,7 @@ const MiddleAlert = (props) => {
     }, [alertBlockRef]);
 
     return (
-        <div className={classNames("alert-block", {"close": isAlertVisible})} ref={ref => alertBlockRef.current = ref} style={{backgroundColor: props.bgColor}}>
+        <div className={classNames("alert-block", {"close": !isAlertVisible})} ref={ref => alertBlockRef.current = ref} style={{backgroundColor: props.bgColor}}>
             <div className="alert-header">{data.header}</div>
             <div className="alert-content">{data.content}</div>
             <div className="alert-footer">
