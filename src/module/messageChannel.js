@@ -6,17 +6,13 @@ export const channel = websocket.init();
 if (channel) {
     channel.onopen = () => {
         logger.info(`websocket onopen`);
-        channel.send(JSON.stringify({
-            "action": "sendmessage",
-            "message": "Hello",
-        }));
     };
 
     channel.onclose = () => {
         logger.info(`websocket onclose`);
     };
 
-    channel.onmessage = (event) => {
-        logger.info(`websocket onmessage event: ${event.data}`);
+    channel.onmessage = () => {
+        logger.info(`websocket onmessage`);
     };
 }

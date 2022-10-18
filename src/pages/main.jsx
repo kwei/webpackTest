@@ -1,29 +1,34 @@
-import React, { useEffect, useRef } from "react";
+import React, {useEffect, useRef, useState} from "react";
+import { shallowEqual, useSelector, useDispatch } from "react-redux";
 import { GrReturn } from "react-icons/gr";
 
-import Record from "../component/Record.jsx";
-import Alert from "../component/Alert.jsx";
-import Notification from "../component/Notification.jsx";
-import { setNumber, resetNumber } from "../redux/numberSlice";
-import { shallowEqual, useSelector, useDispatch } from "react-redux";
+import Record from "../component/Record/Record.jsx";
+import Alert from "../component/Alert/Alert.jsx";
+import Player from "../component/Player/Player.jsx";
+import Notification from "../component/Notification/Notification.jsx";
+import { resetRecord, setRecord, setHighestScore, resetHighestScore } from "../component/Record/recordSlice";
+import { setAlertVisible } from "../component/Alert/alertSlice";
+import { setUser } from "../component/Player/userSlice";
 import { setTarget } from "../redux/targetSlice";
-import { setNotice, resetNotice } from "../redux/noticeSlice";
-import { resetRecord, setRecord } from "../redux/recordSlice";
-import { changeAlertStatus, changeHighestScore, changeInputStatus, changeWinningStatus } from "../redux/statusSlice";
-import { Storage } from "../module/storage";
-import { setUser } from "../redux/userSlice";
-import { Logger } from "../module/logger";
-const storage = Storage();
 
+import { Storage } from "../module/storage";
+import { Logger } from "../module/logger";
+import { eventEmitter } from "../module/eventEmitter";
+import { askPlayerName } from "../module/askPlayerName";
+
+const storage = Storage();
 const logger = Logger({className: "main"});
 
 const MainPage = () => {
     const dispatch = useDispatch();
-    const num = useSelector(state => state.numberReducer.num, shallowEqual);
+
+    const [notice, setNotice] = useState("");
+    const [num, setNum] = useState("");
+    const [isWin, setIsWin] = useState(false);
+    const [inputEditable, setInputEditable] = useState(true);
     const target = useSelector(state => state.targetReducer.num, shallowEqual);
-    const notice = useSelector(state => state.noticeReducer.msg, shallowEqual);
-    const playerName = useSelector(state => state.userReducer.name, shallowEqual);
-    const {isAlertClosed, inputDisabled, highestScore} = useSelector(state => state.statusReducer, shallowEqual);
+    const highestScore = useSelector(state => state.recordReducer.highestScore, shallowEqual);
+    const isAlertVisible = useSelector(state => state.alertReducer.isAlertVisible, shallowEqual);
     const NUM_INPUT_PLACEHOLDER = "請輸入 4 個不重複的數字";
     const RULES = [
         "這是幾 A 幾 B 的小遊戲，請輸入 4 個不重複的數字，從 0 到 9。",
@@ -38,7 +43,7 @@ const MainPage = () => {
     useEffect(() => {
         logger.info("Initialize player's name");
         const _playerName = storage.getStorage('playerName');
-        if (!_playerName) askName();
+        if (!_playerName) dispatch(setUser(askPlayerName()));
         else dispatch(setUser(_playerName));
     }, []);
 
@@ -49,27 +54,27 @@ const MainPage = () => {
     }, [target]);
 
     useEffect(() => {
-        overlayRef.current.style.display = isAlertClosed ? "none" : "block";
-    }, [isAlertClosed]);
+        overlayRef.current.style.display = isAlertVisible ? "block" : "none";
+    }, [isAlertVisible]);
 
     const noticeWording = (str, timeout = 0) => {
         logger.info(`Notice: ${str}`);
-        dispatch(setNotice(str));
-        if (timeout) setTimeout(() => dispatch(setNotice('')), timeout);
+        setNotice(str);
+        if (timeout) setTimeout(() => setNotice(''), timeout);
     }
 
     const handleNumInput = (event) => {
-        dispatch(setNumber(event.target.value.slice(0, 4)));
+        setNumber(event.target.value.slice(0, 4));
     };
 
     const resetStates = () => {
         logger.info("Reset states");
+        setNotice("");
+        setNum("");
+        setInputEditable(false);
+        setIsWin(false);
         dispatch(resetRecord());
-        dispatch(resetNotice());
-        dispatch(resetNumber());
-        dispatch(changeInputStatus(false));
-        dispatch(changeWinningStatus(false));
-        dispatch(changeAlertStatus(true));
+        dispatch(setAlertVisible(false));
         count.current = 0;
     };
 
@@ -107,9 +112,9 @@ const MainPage = () => {
                 if (a === 4) {
                     logger.info("Winning");
                     noticeWording(`遊戲獲勝! 一共花了 ${count.current} 步。`);
-                    dispatch(changeWinningStatus(true));
-                    dispatch(changeAlertStatus(false));
-                    dispatch(changeInputStatus(true));
+                    setIsWin(true);
+                    setInputEditable(false);
+                    dispatch(setAlertVisible(true));
 
                     const playingHistory = storage.getStorage('playingHistory');
                     if (playingHistory) storage.setStorage('playingHistory', playingHistory+count.current);
@@ -117,12 +122,12 @@ const MainPage = () => {
 
                     const currentHistory = storage.getStorage('playingHistory');
                     const highest = Math.min(...currentHistory.split('').map(str => Number(str))).toString();
-                    dispatch(changeHighestScore(highest));
+                    dispatch(setHighestScore(highest));
                 }
             }
             resolve();
         }).then(() => {
-            dispatch(setNumber(''));
+            setNumber("");
         });
     };
 
@@ -131,24 +136,12 @@ const MainPage = () => {
         dispatch(setTarget());
     };
 
-    const askName = () => {
-        let name = window.prompt("請輸入您的遊玩名稱(預設：匿名玩家)", "匿名玩家");
-        if (name === null || "") name = "匿名玩家";
-        storage.setStorage('playerName', name);
-        dispatch(setUser(name));
-    };
-
-    const Player = () => {
-        return (
-            <span className="playerName" onClick={() => askName()}>{playerName}</span>
-        );
-    };
-
     return(
         <>
             <Notification/>
             <div ref={overlayRef} id="overlay">
                 <Alert
+                    isWin={isWin}
                     msg={{
                         "header": "遊戲獲勝",
                         "content": `一共花了 ${count.current} 步。`
@@ -167,7 +160,7 @@ const MainPage = () => {
             <div className="input-block">
                 <input type="number"
                        value={num}
-                       disabled={inputDisabled}
+                       disabled={inputEditable}
                        onChange={handleNumInput}
                        onKeyUp={(event) => {
                            if (event.key === 'Enter') compareAnswer();

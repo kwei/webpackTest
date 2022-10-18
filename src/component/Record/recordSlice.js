@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const defaultState = {
-    record: []
+    record: [],
+    highestScore: "尚無紀錄"
 };
 
 export const recordSlice = createSlice({
@@ -24,8 +25,24 @@ export const recordSlice = createSlice({
                 return {payload: []};
             }
         },
+        setHighestScore: {
+            reducer: (state,action) => {
+                state.highestScore = action.payload;
+            },
+            prepare: (highestScore) => {
+                return {payload: highestScore};
+            }
+        },
+        resetHighestScore: {
+            reducer: (state,action) => {
+                state.highestScore = action.payload;
+            },
+            prepare: () => {
+                return {payload: "尚無紀錄"};
+            }
+        },
     }
 });
 
-export const { setRecord, resetRecord } = recordSlice.actions;
+export const { setRecord, resetRecord, setHighestScore, resetHighestScore } = recordSlice.actions;
 export default recordSlice.reducer;

@@ -1,4 +1,4 @@
-import { changeHighestScore } from "../redux/statusSlice";
+import { setHighestScore } from "../component/Record/recordSlice";
 import store from "../redux/store";
 
 export const Storage =() => {
@@ -12,7 +12,7 @@ export const Storage =() => {
 
     const removeStorage = (key) => {
         localStorage.removeItem(key);
-        store.dispatch(changeHighestScore('尚無紀錄'))
+        store.dispatch(setHighestScore("尚無紀錄"));
     };
 
     const clearStorage = () => {

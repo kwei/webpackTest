@@ -1,19 +1,21 @@
-const { EventEmitter } = require('fbemitter');
-const emitter = EventEmitter();
+import { Logger } from "./logger";
 
-const eventEmitter = {
-    addListener: (eventType, callback) => {
-        console.log("Add listener of ", eventType);
-        emitter.addListener(eventType, callback);
+const { EventEmitter } = require('fbemitter');
+const emitter = new EventEmitter();
+
+const logger = Logger("eventEmitter");
+
+export const eventEmitter = {
+    addListener: (eventName, ...rest) => {
+        logger.info(`Add listener of ${eventName}`);
+        emitter.addListener(eventName, ...rest);
     },
-    emit: (eventType, ...params) => {
-        console.log("Emit event of ", eventType);
-        emitter.emit(eventType, ...params);
+    emit: (eventName, ...rest) => {
+        logger.info(`Emit event of ${eventName}`);
+        emitter.emit(eventName, ...rest);
     },
-    removeAllListeners: (eventType = null) => {
-        console.log("Remove event listener ", eventType);
-        emitter.removeAllListeners();
+    removeAllListeners: (params = null) => {
+        logger.info(`Remove event listener ${params}`);
+        emitter.removeAllListeners(params);
     }
 };
-
-export default eventEmitter;
