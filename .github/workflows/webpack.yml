@@ -26,5 +26,5 @@ jobs:
       run: |
         npm install
         npx webpack --mode production
-        npm deploy
+        npm run build
         gh-pages -d dist
