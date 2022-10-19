@@ -23,13 +23,13 @@ jobs:
         node-version: ${{ matrix.node-version }}
         
     - name: install dependencies
-        run: |
-          npm install
-          npx webpack --mode production
-          npm run build
+      run: |
+        npm install
+        npx webpack --mode production
+        npm run build
 
     - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with: 
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+      uses: peaceiris/actions-gh-pages@v3
+      with: 
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
