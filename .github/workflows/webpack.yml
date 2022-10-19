@@ -25,9 +25,6 @@ jobs:
     - name: install dependencies
         run: |
           npm install
-
-    - name: try to build the project
-        run: |
           npx webpack --mode production
           npm run build
 
