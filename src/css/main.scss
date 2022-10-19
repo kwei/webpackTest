@@ -1,21 +1,8 @@
-body {
-  overflow: auto;
-  font-family: arial,'Microsoft JhengHei','微軟正黑體',sans-serif !important;
-}
-
-#root {
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-  height: 100%;
-  width: 25%;
-}
-
 .container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 100%;
+  width: 75%;
   align-items: center;
   &.darken {
     background-color: black;
@@ -23,18 +10,12 @@ body {
   }
 }
 
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-
 input {
   margin: 0;
   border-radius: 10px;
   padding: 10px 15px;
   border-color: #000000;
-  min-width: 180px;
+  width: 100%;
   &:hover {
 
   }
@@ -44,7 +25,7 @@ input {
 input[type=number] {
   -moz-appearance: textfield;
   margin: 0;
-  min-width: 180px;
+  width: 100%;
   border-radius: 10px;
   padding: 10px 15px;
   border-color: #000000;
@@ -342,4 +323,3 @@ input[type=number] {
   background-color: rgba(0,0,0,0.5);
   z-index: 2;
 }
-

@@ -4,8 +4,8 @@ const defaultState = {
     isAlertVisible: false,
 };
 
-export const AlertSlice = createSlice({
-    name: 'status',
+export const alertSlice = createSlice({
+    name: 'alert',
     initialState: defaultState,
     reducers: {
         setAlertVisible: {
@@ -19,5 +19,5 @@ export const AlertSlice = createSlice({
     }
 });
 
-export const { setAlertVisible } = AlertSlice.actions;
-export default AlertSlice.reducer;
+export const { setAlertVisible } = alertSlice.actions;
+export default alertSlice.reducer;

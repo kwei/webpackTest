@@ -1,3 +1,4 @@
+import '../../css/main.scss';
 import React, {useEffect, useRef, useState} from "react";
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
 import { GrReturn } from "react-icons/gr";
@@ -8,23 +9,21 @@ import { GrReturn } from "react-icons/gr";
  * Use <Suspense/> to handle the fallback, such as a loading component;
  * Use <ErrorBoundary> to handle error rendering React.lazy() component.
  ***/
-const Record = React.lazy(() => import("../component/Record/Record.jsx"));
-const Alert = React.lazy(() => import("../component/Alert/Alert.jsx"));
-const Player = React.lazy(() => import("../component/Player/Player.jsx"));
-const Notification = React.lazy(() => import("../component/Notification/Notification.jsx"));
+const Record = React.lazy(() => import("../../component/Record/Record.jsx"));
+const Alert = React.lazy(() => import("../../component/Alert/Alert.jsx"));
+const Player = React.lazy(() => import("../../component/Player/Player.jsx"));
+const Notification = React.lazy(() => import("../../component/Notification/Notification.jsx"));
 
-import { resetRecord, setRecord, setHighestScore, resetHighestScore } from "../component/Record/recordSlice";
-import { setAlertVisible } from "../component/Alert/alertSlice";
-import { initUser } from "../component/Player/userSlice";
+import { resetRecord, setRecord, setHighestScore, resetHighestScore } from "../../component/Record/recordSlice";
+import { setAlertVisible } from "../../component/Alert/alertSlice";
+import { initUser } from "../../component/Player/userSlice";
 
-import { Storage } from "../module/storage";
-import { Logger } from "../module/logger";
-import { eventEmitter } from "../module/eventEmitter";
-import { askPlayerName } from "../module/askPlayerName";
-import {shuffleArray} from "../module/shuffleArray";
+import { Storage } from "../../module/storage";
+import { Logger } from "../../module/logger";
+import {shuffleArray} from "../../module/shuffleArray";
 
 const storage = Storage();
-const logger = Logger({className: "main"});
+const logger = Logger({className: "MainPage"});
 
 const NUM_INPUT_PLACEHOLDER = "請輸入 4 個不重複的數字";
 const RULES = [
@@ -74,7 +73,7 @@ const MainPage = () => {
         logger.info(`Notice: ${str}`);
         setNotice(str);
         if (timeout) setTimeout(() => setNotice(''), timeout);
-    }
+    };
 
     const handleNumInput = (event) => {
         setNum(event.target.value.slice(0, 4));
@@ -150,7 +149,7 @@ const MainPage = () => {
     };
 
     return(
-        <>
+        <div className="container">
             <Notification/>
             <div ref={overlayRef} id="overlay">
                 <Alert
@@ -196,7 +195,7 @@ const MainPage = () => {
             </div>
             <div className="notice-block">{notice}</div>
             <div className="record-block"><Record/></div>
-        </>
+        </div>
     );
 };
 
