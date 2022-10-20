@@ -38,7 +38,7 @@ const OpeningPage = () => {
         <div className="opening-page">
             <div className="user-info-input">
                 <div className="start-local">
-                    <div className="start-local-btn" onClick={() => enterRoom("/local")}>本地遊玩</div>
+                    <div className="start-local-btn" onClick={() => enterRoom("/local")}>離線模式</div>
                 </div>
                 <div className="start-party">
                     <div className="userName">
@@ -76,7 +76,7 @@ const OpeningPage = () => {
                                  noticeWording("只能輸入數字", 1500);
                              }
                          }}>
-                        加入派對 (尚無功能)
+                        派對模式 (尚無功能)
                     </div>
                 </div>
             </div>
