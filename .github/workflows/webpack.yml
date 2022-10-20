@@ -22,10 +22,16 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         
-    - name: install dependencies
+    - name: Install Dependencies
       run: |
         npm install
+
+    - name: Webpack Compiling
+      run: |
         npx webpack --mode production
+
+    - name: Build Static HTML
+      run: |
         npm run build
 
     - name: Deploy
