@@ -5,7 +5,10 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import Home from "./Home.jsx";
 
-const render = createRoot(document.getElementById('root'));
+const rootElement = document.getElementById('root');
+const render = createRoot(rootElement);
+rootElement.ondrop = (event) => event.preventDefault();
+rootElement.ondrag = (event) => event.preventDefault();
 
 const App = () => {
     return (
