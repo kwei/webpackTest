@@ -1,2 +1,0 @@
-# webpackTest
-Practice webpack tool
