@@ -19,17 +19,17 @@
   /* From https://css.glass */
   background: rgba(255, 255, 255, 0.77);
   border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 255, 187, 0.1), 0 2px 15px rgba(0, 234, 255, 0.3);
+  box-shadow: 0 4px 30px rgba(86, 86, 86, 0.1), 0 2px 15px rgba(112, 112, 112, 0.3);
   backdrop-filter: blur(5.6px);
   -webkit-backdrop-filter: blur(5.6px);
   border: 1px solid rgba(255, 255, 255, 1);
 
-  animation-name: shrink;
-  animation-duration: 4s;
-  animation-iteration-count: infinite;
-  -webkit-animation-name: shrink;
-  -webkit-animation-duration: 4s;
-  -webkit-animation-iteration-count: infinite;
+  //animation-name: shrink;
+  //animation-duration: 4s;
+  //animation-iteration-count: infinite;
+  //-webkit-animation-name: shrink;
+  //-webkit-animation-duration: 4s;
+  //-webkit-animation-iteration-count: infinite;
 
   .page-header {
     @include flexContainer(80%, 30px);
