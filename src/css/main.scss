@@ -103,13 +103,27 @@ input[type=number] {
   text-align: center;
 }
 
-#Generate {
-  border-radius: 10px;
-  border-width: 2px;
-  background-color: #aed8ff;
+#Pause {
+  border-radius: 3px;
+  padding: 7px 8px 5px 8px;
+  background-color: #dcdcdc;
+  border: 2px solid black;
   cursor: pointer;
+  margin: 10px;
   &:hover {
-    background-color: #9ccfff;
+    background-color: #e5e5e5;
+  }
+}
+
+#Generate {
+  border-radius: 3px;
+  padding: 7px 8px 5px 8px;
+  background-color: #dcdcdc;
+  border: 2px solid black;
+  cursor: pointer;
+  margin: 10px;
+  &:hover {
+    background-color: #e5e5e5;
   }
 }
 

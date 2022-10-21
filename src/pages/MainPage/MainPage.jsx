@@ -21,6 +21,7 @@ import { initUser } from "../../component/Player/userSlice";
 import { Storage } from "../../module/storage";
 import { Logger } from "../../module/logger";
 import {shuffleArray} from "../../module/shuffleArray";
+import {VscDebugPause, VscDebugRestart} from "react-icons/vsc";
 
 const storage = Storage();
 const logger = Logger({className: "MainPage"});
@@ -53,7 +54,7 @@ const MainPage = () => {
 
     useEffect(() => {
         logger.info("Initialize player's name");
-        dispatch(initUser());
+        dispatch(initUser(undefined));
     }, []);
 
     useEffect(() => {
@@ -85,7 +86,7 @@ const MainPage = () => {
         setNum("");
         setInputEditable(true);
         setIsWin(false);
-        dispatch(resetRecord());
+        dispatch(resetRecord(undefined));
         dispatch(setAlertVisible(false));
         count.current = 0;
     };
@@ -186,12 +187,13 @@ const MainPage = () => {
                     if (window.confirm('確定要清除遊玩紀錄?')) {
                         logger.info("Remove playing record");
                         storage.removeStorage("playingHistory");
-                        dispatch(resetHighestScore());
+                        dispatch(resetHighestScore(undefined));
                     }
                 }}>清除紀錄</a>
             </div>
             <div className="button-area">
-                <button onClick={() => newRound()} id="Generate" >重新開始</button>
+                <button onClick={() => {}} id="Pause" ><VscDebugPause/></button>
+                <button onClick={() => newRound()} id="Generate" ><VscDebugRestart/></button>
             </div>
             <div className="notice-block">{notice}</div>
             <div className="record-block"><Record/></div>
