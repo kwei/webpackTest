@@ -93,7 +93,7 @@ const OpeningPageV2 = () => {
     return (
         <div className={"container"}>
             <div className={"opening-page"}>
-                <div className={"page-header"}>Bulls and Cows (1A2B)</div>
+                <div className={"page-header"}>幾 A 幾 B</div>
                 <div className={"page-content"}>
                     <div ref={localBtnRef} className={"start-local-btn"} onClick={handleLocalBtnClick}>
                         離線模式 <FaMousePointer style = {{transform: 'rotate(-30deg)'}}/>
@@ -105,16 +105,19 @@ const OpeningPageV2 = () => {
                         {formSheet()}
                         <div className={"btn-block"}>
                             <div className={"back-btn"} onClick={handleBackBtnClick}>
-                                <IoIosArrowForward style = {{transform: 'translateY(2px)'}}/> 返回 <IoIosArrowBack style = {{transform: 'translateY(2px)'}}/>
+                                <div className={"temp-container"}>
+                                    <IoIosArrowForward style = {{transform: 'translateY(2px)'}}/> 返回 <IoIosArrowBack style = {{transform: 'translateY(2px)'}}/>
+                                </div>
                             </div>
                             <div ref={confirmBtnRef} className={"confirm-btn"} onClick={handleConfirmBtnClick}>
-                                <IoIosArrowForward style = {{transform: 'translateY(2px)'}}/> 確認 <IoIosArrowBack style = {{transform: 'translateY(2px)'}}/>
+                                <div className={"temp-container"}>
+                                    <IoIosArrowForward style = {{transform: 'translateY(2px)'}}/> 確認 <IoIosArrowBack style = {{transform: 'translateY(2px)'}}/>
+                                </div>
                             </div>
                         </div>
                         <div className="wording">{wording}</div>
                     </div>}
                 </div>
-                <div className={"page-footer"}></div>
             </div>
         </div>
     );
