@@ -40,7 +40,7 @@
   }
 
   .page-content {
-    @include flexContainer(80%, 100%);
+    @include flexContainer(90%, 100%);
     margin: 2px 2px;
 
     .start-local-btn {
