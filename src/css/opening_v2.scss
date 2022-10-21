@@ -1,0 +1,155 @@
+@mixin flexContainer($width, $height) {
+  width: $width;
+  height: $height;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container {
+  @include flexContainer(50%, 100%);
+  margin: 30px;
+  padding: 30px;
+}
+
+.opening-page {
+  @include flexContainer(70%, calc((100vh - 60px - 60px - 16px - 2px) / 2));
+  padding: 8px;
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.77);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 255, 187, 0.1), 0 2px 15px rgba(0, 234, 255, 0.3);
+  backdrop-filter: blur(5.6px);
+  -webkit-backdrop-filter: blur(5.6px);
+  border: 1px solid rgba(255, 255, 255, 1);
+
+  .page-header {
+    @include flexContainer(50%, 30px);
+    margin: 20px 0 10px 0;
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+  }
+
+  .page-content {
+    @include flexContainer(50%, 100%);
+    margin: 2px 2px;
+
+    .start-local-btn {
+      width: 90%;
+      height: auto;
+      margin: 10px 0 5px 0;
+      padding: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: 1px solid #04364b;
+      background-color: #36a4d3;
+      text-align: center;
+      font-weight: bold;
+      box-shadow: rgba(0, 0, 0, 0.16) 0 1px 4px;
+      &:hover {
+        background-color: #87ccea;
+      }
+    }
+
+    .start-party-btn {
+      width: 90%;
+      height: auto;
+      margin: 10px 0 5px 0;
+      padding: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: 1px solid #053616;
+      background-color: #44d271;
+      text-align: center;
+      font-weight: bold;
+      box-shadow: rgba(0, 0, 0, 0.16) 0 1px 4px;
+      &:hover {
+        background-color: #7eeaa1;
+      }
+    }
+
+    .form {
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      margin: 20px 0 0 0;
+
+      .btn-block {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 50px;
+        .back-btn {
+          flex: 1;
+          margin: auto;
+          height: auto;
+          text-align: center;
+          cursor: pointer;
+          font-weight: bold;
+          color: rgb(148, 148, 148);
+          border-radius: 2px;
+          &:hover {
+            padding: 2px 2px 5px 2px;
+          }
+        }
+        .confirm-btn {
+          flex: 1;
+          margin: auto;
+          height: auto;
+          text-align: center;
+          cursor: pointer;
+          font-weight: bold;
+          color: rgb(92, 203, 73);
+          border-radius: 2px;
+          &:hover {
+            padding: 2px 2px 5px 2px;
+          }
+        }
+      }
+    }
+  }
+
+  .page-footer {
+    @include flexContainer(50%, 20px);
+    margin: 2px 2px;
+    text-align: center;
+  }
+}
+
+.userName {
+  width: 100%;
+  height: 30px;
+  margin: 8px 10px;
+  display: flex;
+  flex-direction: row;
+  .userName-input-label {
+    margin: auto;
+    padding: 0 15px 0 0;
+  }
+  .userName-input {
+    flex: 1;
+  }
+}
+.roomID {
+  width: 100%;
+  height: 30px;
+  margin: 8px 10px;
+  display: flex;
+  flex-direction: row;
+  .roomID-input-label {
+    margin: auto;
+    padding: 0 15px 0 0;
+  }
+  .roomID-input {
+    flex: 1;
+  }
+}
+
+.wording {
+  color: #d93838;
+  font-size: 10px;
+}
