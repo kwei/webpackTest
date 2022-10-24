@@ -3,10 +3,12 @@ import React, {useEffect, useRef, useState} from "react";
 import { webrtcHandler } from "../../module/webrtc";
 import { Logger } from "../../module/logger";
 import { shallowEqual, useSelector } from "react-redux";
+import { initBroadcastChannel } from "../../module/broadcastChannel";
 
 const logger = Logger({className: "PartyPage"});
 const reader = new FileReader();
 let role = "host";
+let signaling = null;
 
 const dragOverHandler = (event) => event.preventDefault();
 
@@ -67,6 +69,17 @@ const PartyPage = () => {
     const onIceCandidate = (peerConnection) => {
         logger.info("Set listener on ice candidate");
         peerConnection.onicecandidate = e => {
+            const message = {
+                type: 'candidate',
+                candidate: null,
+            };
+            if (e.candidate) {
+                message.candidate = e.candidate.candidate;
+                message.sdpMid = e.candidate.sdpMid;
+                message.sdpMLineIndex = e.candidate.sdpMLineIndex;
+            }
+            signaling.postMessage(message);
+
             if (e.candidate && e.candidate.candidate) {
                 logger.success(`Get Ice Candidate`);
                 setCandidateStr(e.candidate.candidate.toString());
@@ -82,12 +95,13 @@ const PartyPage = () => {
 
     const initPeerConnection = async () => {
         const pc = await webrtcHandler.createPeer();
+        signaling = initBroadcastChannel(pc, "webrtc");
         setPeerConnection(pc);
-        if (role === "host") {
-            const offer = await webrtcHandler.createOffer(pc);
-            const blob = new Blob([JSON.stringify(offer)], {type: 'octet/stream'});
-            downloadIframeRef.current.src = window.URL.createObjectURL(blob);
-        }
+        // if (role === "host") {
+        //     const offer = await webrtcHandler.createOffer(pc);
+        //     const blob = new Blob([JSON.stringify(offer)], {type: 'octet/stream'});
+        //     downloadIframeRef.current.src = window.URL.createObjectURL(blob);
+        // }
     };
 
     return (

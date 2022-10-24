@@ -15,6 +15,7 @@ export const webrtcHandler = {
         peerConnection.oniceconnectionstatechange = async (e) => oniceconnectionstatechange(e);
         localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
         logger.success(`Create Peer Connection`);
+        window.localStream = localStream;
         return peerConnection;
     },
     createOffer: async (peerConnection) => {
@@ -36,5 +37,9 @@ export const webrtcHandler = {
     handleAnswer: async (peerConnection, answer) => {
         logger.success(`Get Answer`);
         await peerConnection.setRemoteDescription(answer);
+    },
+    handleCandidate: async (peerConnection, candidate) => {
+        logger.success(`Get Answer`);
+        await peerConnection.addIceCandidate(candidate);
     },
 };
