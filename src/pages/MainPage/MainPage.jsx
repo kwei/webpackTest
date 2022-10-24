@@ -20,8 +20,8 @@ import { initUser } from "../../component/Player/userSlice";
 
 import { Storage } from "../../module/storage";
 import { Logger } from "../../module/logger";
-import {shuffleArray} from "../../module/shuffleArray";
-import {VscDebugPause, VscDebugRestart} from "react-icons/vsc";
+import { shuffleArray } from "../../module/shuffleArray";
+import { VscDebugRestart } from "react-icons/vsc";
 
 const storage = Storage();
 const logger = Logger({className: "MainPage"});
@@ -103,6 +103,16 @@ const MainPage = () => {
         return isValid;
     };
 
+    const saveCurrentRecord = (record) => {
+        const currentRecord = storage.getStorage('currentRecord');
+        if (currentRecord) storage.setStorage('currentRecord', currentRecord+","+record);
+        else storage.setStorage('currentRecord', record);
+    };
+
+    const removeCurrentRecord = () => {
+        storage.removeStorage('currentRecord');
+    };
+
     const compareAnswer = () => {
         logger.info("Compare answer");
         let a = 0, b = 0;
@@ -122,6 +132,7 @@ const MainPage = () => {
                 const _res = `${num.split('').join(' ')}:${a} A ${b} B`;
                 dispatch(setRecord(_res));
                 logger.verbose(`Current result ${_res}`);
+                saveCurrentRecord(_res);
                 if (a === 4) {
                     logger.info("Winning");
                     noticeWording(`遊戲獲勝! 一共花了 ${count.current} 步。`);
@@ -136,6 +147,7 @@ const MainPage = () => {
                     const currentHistory = storage.getStorage('playingHistory');
                     const highest = Math.min(...currentHistory.split('').map(str => Number(str))).toString();
                     dispatch(setHighestScore(highest));
+                    removeCurrentRecord();
                 }
             }
             resolve();
@@ -146,6 +158,7 @@ const MainPage = () => {
 
     const newRound = () => {
         logger.info("New round");
+        removeCurrentRecord();
         setTarget(shuffleArray(baseNumbers).slice(0, 4).join(''));
     };
 
@@ -192,8 +205,7 @@ const MainPage = () => {
                 }}>清除紀錄</a>
             </div>
             <div className="button-area">
-                <button onClick={() => {}} id="Pause" ><VscDebugPause/></button>
-                <button onClick={() => newRound()} id="Generate" ><VscDebugRestart/></button>
+                <button onClick={() => newRound()} id="Generate" >重新開始 <VscDebugRestart style = {{transform: 'translateY(2px)'}}/></button>
             </div>
             <div className="notice-block">{notice}</div>
             <div className="record-block"><Record/></div>

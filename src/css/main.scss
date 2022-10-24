@@ -103,25 +103,12 @@ input[type=number] {
   text-align: center;
 }
 
-#Pause {
-  border-radius: 3px;
-  padding: 7px 8px 5px 8px;
-  background-color: #dcdcdc;
-  border: 2px solid black;
-  cursor: pointer;
-  margin: 10px;
-  &:hover {
-    background-color: #e5e5e5;
-  }
-}
-
 #Generate {
   border-radius: 3px;
-  padding: 7px 8px 5px 8px;
+  padding: 8px;
   background-color: #dcdcdc;
   border: 2px solid black;
   cursor: pointer;
-  margin: 10px;
   &:hover {
     background-color: #e5e5e5;
   }

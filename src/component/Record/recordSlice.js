@@ -10,8 +10,14 @@ const getPlayingHistory = () => {
     } else return "尚無紀錄";
 };
 
+const getCurrentRecord = () => {
+    const currentRecord = storage.getStorage('currentRecord');
+    if (currentRecord) return currentRecord.split(',');
+    else return [];
+};
+
 const defaultState = {
-    record: [],
+    record: getCurrentRecord(),
     highestScore: getPlayingHistory()
 };
 
