@@ -141,12 +141,18 @@ const MainPage = () => {
                     dispatch(setAlertVisible(true));
 
                     const playingHistory = storage.getStorage('playingHistory');
-                    if (playingHistory) storage.setStorage('playingHistory', playingHistory+count.current);
+                    if (playingHistory) storage.setStorage('playingHistory', playingHistory+","+count.current);
                     else storage.setStorage('playingHistory', count.current);
 
-                    const currentHistory = storage.getStorage('playingHistory');
-                    const highest = Math.min(...currentHistory.split('').map(str => Number(str))).toString();
-                    dispatch(setHighestScore(highest));
+                    let currentHistory = Array(0);
+                    storage.getStorage('playingHistory').split(',').map(str => {
+                        currentHistory.push(Number(str));
+                    });
+                    if (currentHistory.length !== 0) {
+                        const v = Math.min(...currentHistory).toString();
+                        logger.info(`HighestScore: ${v}`);
+                        dispatch(setHighestScore(v));
+                    }
                     removeCurrentRecord();
                 }
             }
