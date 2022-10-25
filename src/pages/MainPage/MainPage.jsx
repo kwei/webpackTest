@@ -35,7 +35,10 @@ const RULES = [
 ];
 
 const baseNumbers = [...Array(10).keys()];
-const initTarget = shuffleArray(baseNumbers).slice(0, 4).join('');
+let initTarget = null;
+const currentTarget = storage.getStorage('currentTarget');
+if (currentTarget) initTarget = currentTarget;
+else initTarget = shuffleArray(baseNumbers).slice(0, 4).join('');
 logger.verbose(`Init target number: ${initTarget}`);
 
 const MainPage = () => {
@@ -62,6 +65,7 @@ const MainPage = () => {
             resetStates()
             noticeWording("新的一局!", 1500);
             logger.verbose(`New target number: ${target}`);
+            storage.setStorage('currentTarget', target);
         }
         isMounted.current = true;
     }, [target]);
@@ -89,6 +93,8 @@ const MainPage = () => {
         dispatch(resetRecord(undefined));
         dispatch(setAlertVisible(false));
         count.current = 0;
+        removeCurrentRecord();
+        storage.removeStorage('currentTarget');
     };
 
     const checkInputs = () => {
@@ -164,7 +170,6 @@ const MainPage = () => {
 
     const newRound = () => {
         logger.info("New round");
-        removeCurrentRecord();
         setTarget(shuffleArray(baseNumbers).slice(0, 4).join(''));
     };
 
