@@ -15,15 +15,17 @@ export const initBroadcastChannel = (pc, channelName) => {
         switch (e.data.type) {
             case 'offer':
                 logger.info("received offer");
-                webrtcHandler.handleOffer(pc, e.data).then();
+                webrtcHandler.handleOffer(pc, e.data.sdp).then(answer => {
+                    sendAnswer(answer).then();
+                });
                 break;
             case 'answer':
                 logger.info("received answer");
-                webrtcHandler.handleAnswer(pc, e.data).then();
+                webrtcHandler.handleAnswer(pc, e.data.sdp).then();
                 break;
             case 'candidate':
                 logger.info("received candidate");
-                webrtcHandler.handleCandidate(pc, e.data).then();
+                webrtcHandler.handleCandidate(pc, e.data.candidate).then();
                 break;
             case 'ready':
                 logger.info("received ready");
@@ -47,8 +49,14 @@ export const initBroadcastChannel = (pc, channelName) => {
 
     async function makeCall() {
         const offer = await pc.createOffer();
-        signaling.postMessage({type: 'offer', sdp: offer.sdp});
+        logger.info("Send offer");
+        signaling.postMessage({type: 'offer', sdp: JSON.parse(JSON.stringify(offer))});
         await pc.setLocalDescription(offer);
+    }
+
+    async function sendAnswer(answer) {
+        logger.info("Send answer");
+        signaling.postMessage({type: 'answer', sdp: JSON.parse(JSON.stringify(answer))});
     }
 
     async function hangup() {

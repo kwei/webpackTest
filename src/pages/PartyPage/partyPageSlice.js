@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const defaultState = {
-    roomID: "HOST",
+    roomID: "",
+    role: "host"
 };
 
 export const partyPageSlice = createSlice({
@@ -16,8 +17,16 @@ export const partyPageSlice = createSlice({
                 return {payload: roomID};
             }
         },
+        setRole: {
+            reducer: (state,action) => {
+                state.role = action.payload;
+            },
+            prepare: (role) => {
+                return {payload: role};
+            }
+        },
     }
 });
 
-export const { setRoom } = partyPageSlice.actions;
+export const { setRoom, setRole } = partyPageSlice.actions;
 export default partyPageSlice.reducer;

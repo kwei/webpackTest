@@ -33,13 +33,17 @@ export const webrtcHandler = {
     handleOffer: async (peerConnection, offer) => {
         logger.success(`Get Offer`);
         await peerConnection.setRemoteDescription(offer);
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(answer);
+        logger.success(`Create Answer`);
+        return answer
     },
     handleAnswer: async (peerConnection, answer) => {
         logger.success(`Get Answer`);
         await peerConnection.setRemoteDescription(answer);
     },
     handleCandidate: async (peerConnection, candidate) => {
-        logger.success(`Get Answer`);
-        await peerConnection.addIceCandidate(candidate);
+        logger.success(`Get candidate ${candidate}`);
+        if (candidate) await peerConnection.addIceCandidate(candidate.candidate);
     },
 };

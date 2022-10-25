@@ -5,9 +5,11 @@ const storage = Storage();
 
 const getPlayingHistory = () => {
     let currentHistory = Array(0);
-    storage.getStorage('playingHistory').split(',').map(str => {
-        currentHistory.push(Number(str));
-    });
+    if (storage.getStorage('playingHistory')) {
+        storage.getStorage('playingHistory').split(',').map(str => {
+            currentHistory.push(Number(str));
+        });
+    }
     if (currentHistory.length !== 0) {
         return Math.min(...currentHistory).toString();
     } else return "尚無紀錄";

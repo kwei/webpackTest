@@ -6,6 +6,8 @@ import { FaMousePointer } from "react-icons/fa";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { checkInputs } from "../../module/checkInputs";
+import { setUser } from "../../component/Player/userSlice";
+import { setRoom, setRole } from "../PartyPage/partyPageSlice";
 const logger = Logger({className: "OpeningPage"});
 
 const NAME_INPUT_PLACEHOLDER = "請輸入欲顯示之名稱";
@@ -42,7 +44,23 @@ const OpeningPageV2 = () => {
 
     const handleConfirmBtnClick = () => {
         logger.success(`Start with ${gameMode} mode!`);
-        enterRoom("/"+gameMode);
+        if (checkInputs(id)) {
+            let _name = "匿名玩家";
+            if (userName !== "") _name = userName;
+            if (id !== "") {
+                dispatch(setRoom(id));
+                logger.info("slave");
+                dispatch(setRole("slave"));
+            } else {
+                logger.info("host");
+                dispatch(setRole("host"));
+            }
+            dispatch(setUser(_name));
+
+            enterRoom("/"+gameMode);
+        } else {
+            noticeWording("只能輸入數字", 1500);
+        }
     };
 
     const noticeWording = (str, timeout = 0) => {
