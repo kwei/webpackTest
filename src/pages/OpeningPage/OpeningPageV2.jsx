@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { Logger } from "../../module/logger";
 import { switchPage } from "./openingPageSlice";
 import { FaMousePointer } from "react-icons/fa";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { TiArrowBackOutline, TiTickOutline, TiUserOutline, TiKeyOutline } from "react-icons/ti";
 import { useDispatch } from "react-redux";
 import { checkInputs } from "../../module/checkInputs";
 import { setUser } from "../../component/Player/userSlice";
@@ -82,7 +82,7 @@ const OpeningPageV2 = () => {
             return (
                 <>
                     <div className="userName">
-                        <div className="userName-input-label">名稱</div>
+                        <div className="userName-input-label">名稱 <TiUserOutline style = {{transform: 'translateY(4px)', fontSize: "20px"}}/></div>
                         <input type="text"
                                className="userName-input"
                                value={userName}
@@ -90,7 +90,7 @@ const OpeningPageV2 = () => {
                                placeholder={NAME_INPUT_PLACEHOLDER} />
                     </div>
                     <div className="roomID">
-                        <div className="roomID-input-label">代碼</div>
+                        <div className="roomID-input-label">代碼 <TiKeyOutline style = {{transform: 'translateY(4px)', fontSize: "20px"}}/></div>
                         <input type="text"
                                className="roomID-input"
                                value={id}
@@ -124,12 +124,12 @@ const OpeningPageV2 = () => {
                         <div className={"btn-block"}>
                             <div className={"back-btn"} onClick={handleBackBtnClick}>
                                 <div className={"temp-container"}>
-                                    <IoIosArrowForward style = {{transform: 'translateY(2px)'}}/> 返回 <IoIosArrowBack style = {{transform: 'translateY(2px)'}}/>
+                                    返回 <TiArrowBackOutline style = {{transform: 'translateX(2px)', fontSize: "20px"}}/>
                                 </div>
                             </div>
                             <div ref={confirmBtnRef} className={"confirm-btn"} onClick={handleConfirmBtnClick}>
                                 <div className={"temp-container"}>
-                                    <IoIosArrowForward style = {{transform: 'translateY(2px)'}}/> 確認 <IoIosArrowBack style = {{transform: 'translateY(2px)'}}/>
+                                    確認 <TiTickOutline style = {{transform: 'translateX(2px)', fontSize: "20px"}}/>
                                 </div>
                             </div>
                         </div>
