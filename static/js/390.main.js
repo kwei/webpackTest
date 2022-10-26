@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwebpacktest=self.webpackChunkwebpacktest||[]).push([[390],{2390:(e,t,a)=>{a.r(t),a.d(t,{default:()=>s});var n=a(7294),c=function(e){var t=e.text;return n.createElement("div",{className:"info"},t.map((function(e,t){return n.createElement("span",{key:t},e)})))};const s=n.memo(c)}}]);

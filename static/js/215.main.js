@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwebpacktest=self.webpackChunkwebpacktest||[]).push([[215],{5215:(e,t,a)=>{a.r(t),a.d(t,{default:()=>s});var n=a(7294),r=a(4578),c=function(e){var t=e.onClick,a=e.value;return n.createElement("button",{onClick:t,id:"Generate"},a," ",n.createElement(r.p9r,{style:{transform:"translateY(2px)"}}))};const s=n.memo(c)}}]);
