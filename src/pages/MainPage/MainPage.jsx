@@ -58,6 +58,7 @@ const MainPage = () => {
 
     const count = useRef(initWinningStep);
     const isMounted = useRef(false);
+    const inputRef = useRef(null);
     let overlayRef = useRef(null);
 
     useEffect(() => {
@@ -153,6 +154,7 @@ const MainPage = () => {
             }
         }
         setNum("");
+        inputRef.current.focus();
     };
 
     const handleOverlayClick = () => {
@@ -172,6 +174,7 @@ const MainPage = () => {
             <div className="rule-block"><InfoBlock text={RULES}/></div>
             <div className="input-block">
                 <input type="number"
+                       ref={inputRef}
                        value={num}
                        disabled={!inputEditable}
                        onChange={handleNumInput}
