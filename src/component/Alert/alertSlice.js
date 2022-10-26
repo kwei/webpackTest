@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const defaultState = {
     isAlertVisible: false,
+    winningStep: "",
 };
 
 export const alertSlice = createSlice({
@@ -16,8 +17,16 @@ export const alertSlice = createSlice({
                 return {payload: isAlertVisible};
             }
         },
+        setWinningStep: {
+            reducer: (state,action) => {
+                state.winningStep = action.payload;
+            },
+            prepare: (winningStep) => {
+                return {payload: winningStep};
+            }
+        },
     }
 });
 
-export const { setAlertVisible } = alertSlice.actions;
+export const { setAlertVisible, setWinningStep } = alertSlice.actions;
 export default alertSlice.reducer;

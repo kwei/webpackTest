@@ -13,6 +13,7 @@ const loadPage = (pageID) => {
     if (pageID === "/") return <OpeningPageV2/>;
     else if (pageID === "/local") return <MainPage/>;
     else if (pageID === "/party") return <PartyPage/>;
+    // return <Loader/>;
 }
 
 const Home = () => {

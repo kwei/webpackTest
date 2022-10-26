@@ -1,14 +1,12 @@
 import React from "react";
-import { askPlayerName } from "../../module/askPlayerName";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { setUser } from "./userSlice";
 
-const Player = () => {
-    const dispatch = useDispatch();
-    const playerName = useSelector(state => state.userReducer.name, shallowEqual);
+const Player = (props) => {
+    const playerName = props.playerName;
 
     return (
-        <span className="playerName" onClick={() => dispatch(setUser(askPlayerName()))}>{playerName}</span>
+        <div className="playerName">
+            {playerName}
+        </div>
     );
 };
 

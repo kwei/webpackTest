@@ -1,8 +1,7 @@
 import React from "react";
-import { shallowEqual, useSelector } from "react-redux";
 
-const RenderRecord = () => {
-    const record = useSelector(state => state.recordReducer.record, shallowEqual);
+const Record = (props) => {
+    const record = props.record;
     return (
         <ul className="ul-no-bullet">
             {record.length > 0 &&
@@ -22,4 +21,4 @@ const RenderRecord = () => {
     );
 };
 
-export default React.memo(RenderRecord);
+export default React.memo(Record);

@@ -4,14 +4,9 @@ import { Storage } from "../../module/storage";
 const storage = Storage();
 
 const getPlayingHistory = () => {
-    let currentHistory = Array(0);
-    if (storage.getStorage('playingHistory')) {
-        storage.getStorage('playingHistory').split(',').map(str => {
-            currentHistory.push(Number(str));
-        });
-    }
-    if (currentHistory.length !== 0) {
-        return Math.min(...currentHistory).toString();
+    let currentHistory = storage.getStorage('playingHistory');
+    if (currentHistory) {
+        return Math.min(...currentHistory.split(',').map(str => Number(str))).toString();
     } else return "尚無紀錄";
 };
 

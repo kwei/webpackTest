@@ -109,7 +109,7 @@ const OpeningPageV2 = () => {
 
 
     return (
-        <div className={"container"}>
+        <div className={"container-opening"}>
             <div className={"opening-page"}>
                 <div className={"page-header"}>幾 A 幾 B</div>
                 <div className={"page-content"}>

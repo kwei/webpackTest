@@ -1,18 +1,23 @@
 import MiddleAlert from "./MiddleAlert.jsx";
 import React from "react";
+import { shallowEqual, useSelector } from "react-redux";
 
 
 const Alert = (props) => {
+    const winningStep = useSelector(state => state.alertReducer.winningStep, shallowEqual);
+    const isAlertVisible = props.isAlertVisible;
     return(
         <div className="modal-alert">
-            {props.isWin &&
-                <MiddleAlert
-                    data={props.msg}
-                    bgColor={props.bgColor}
-                    actionName={props.actionName}
-                    action={props.action}
-                />
-            }
+            <MiddleAlert
+                data={{
+                    "header": "遊戲獲勝",
+                    "content": `一共花了 ${winningStep} 步。`
+                }}
+                bgColor="#f3ebb6"
+                actionName="重新一局"
+                isAlertVisible={isAlertVisible}
+                action={props.action}
+            />
         </div>
     );
 };

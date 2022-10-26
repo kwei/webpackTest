@@ -54,7 +54,7 @@ const PartyPage = () => {
     };
 
     return (
-        <div className="party">
+        <div className="container-party">
             <div className="info-block">
                 Hello {userName} ({role})!
             </div>

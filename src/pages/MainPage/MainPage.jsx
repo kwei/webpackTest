@@ -1,5 +1,5 @@
 import '../../css/main.scss';
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
 import { GrReturn } from "react-icons/gr";
 
@@ -10,18 +10,18 @@ import { GrReturn } from "react-icons/gr";
  * Use <ErrorBoundary> to handle error rendering React.lazy() component.
  ***/
 const Record = React.lazy(() => import("../../component/Record/Record.jsx"));
+const Notice = React.lazy(() => import("../../component/Notice/Notice.jsx"));
+const InfoBlock = React.lazy(() => import("../../component/InfoBlock/InfoBlock.jsx"));
 const Alert = React.lazy(() => import("../../component/Alert/Alert.jsx"));
-const Player = React.lazy(() => import("../../component/Player/Player.jsx"));
-const Notification = React.lazy(() => import("../../component/Notification/Notification.jsx"));
+const RestartBtn = React.lazy(() => import("../../component/Button/RestartBtn.jsx"));
 
-import { resetRecord, setRecord, setHighestScore, resetHighestScore } from "../../component/Record/recordSlice";
-import { setAlertVisible } from "../../component/Alert/alertSlice";
-import { initUser } from "../../component/Player/userSlice";
+import { setHighestScore, resetHighestScore } from "../../component/Record/recordSlice";
+import { setWinningStep } from "../../component/Alert/alertSlice";
 
 import { Storage } from "../../module/storage";
 import { Logger } from "../../module/logger";
 import { shuffleArray } from "../../module/shuffleArray";
-import { VscDebugRestart } from "react-icons/vsc";
+import { checkInputs } from "../../module/checkInputs";
 
 const storage = Storage();
 const logger = Logger({className: "MainPage"});
@@ -47,18 +47,16 @@ const MainPage = () => {
     const [notice, setNotice] = useState("");
     const [num, setNum] = useState("");
     const [isWin, setIsWin] = useState(false);
+    const [isAlertVisible, setAlertVisible] = useState(false);
     const [inputEditable, setInputEditable] = useState(true);
     const [target, setTarget] = useState(initTarget);
+    const [record, setRecord] = useState([]);
+
     const highestScore = useSelector(state => state.recordReducer.highestScore, shallowEqual);
-    const isAlertVisible = useSelector(state => state.alertReducer.isAlertVisible, shallowEqual);
+
     const count = useRef(0);
     const isMounted = useRef(false);
     let overlayRef = useRef(null);
-
-    useEffect(() => {
-        logger.info("Initialize player's name");
-        dispatch(initUser(undefined));
-    }, []);
 
     useEffect(() => {
         if (isMounted.current) {
@@ -71,8 +69,26 @@ const MainPage = () => {
     }, [target]);
 
     useEffect(() => {
-        overlayRef.current.style.display = isAlertVisible ? "block" : "none";
+        if (isMounted.current) {
+            overlayRef.current.style.display = isAlertVisible ? "block" : "none";
+        }
+        isMounted.current = true;
     }, [isAlertVisible]);
+
+    useEffect(() => {
+        if (isWin) {
+            setInputEditable(false);
+            setAlertVisible(true);
+            dispatch(setWinningStep(count.current));
+
+            const playingHistory = storage.getStorage('playingHistory');
+            if (playingHistory) storage.setStorage('playingHistory', playingHistory+","+count.current);
+            else storage.setStorage('playingHistory', count.current);
+
+            const currentHistory = storage.getStorage('playingHistory').split(',').map(str => Number(str));
+            if (currentHistory.length !== 0) dispatch(setHighestScore(Math.min(...currentHistory).toString()));
+        }
+    }, [isWin]);
 
     const noticeWording = (str, timeout = 0) => {
         logger.info(`Notice: ${str}`);
@@ -90,23 +106,11 @@ const MainPage = () => {
         setNum("");
         setInputEditable(true);
         setIsWin(false);
-        dispatch(resetRecord(undefined));
-        dispatch(setAlertVisible(false));
+        setRecord([]);
+        setAlertVisible(false);
         count.current = 0;
-        removeCurrentRecord();
+        storage.removeStorage('currentRecord');
         storage.removeStorage('currentTarget');
-    };
-
-    const checkInputs = () => {
-        let isValid = true;
-        if ([...new Set(num)].length < 4) {
-            isValid = false;
-        } else {
-            num.split('').map(value => {
-                if (value.charCodeAt(0) < 48 || value.charCodeAt(0) > 57) isValid = false;
-            });
-        }
-        return isValid;
     };
 
     const saveCurrentRecord = (record) => {
@@ -115,85 +119,54 @@ const MainPage = () => {
         else storage.setStorage('currentRecord', record);
     };
 
-    const removeCurrentRecord = () => {
-        storage.removeStorage('currentRecord');
+    const calculateAB = (num) => {
+        let a = 0, b = 0;
+        num.split('').map((digit, index) => {
+            if (digit === target[index]) {
+                a++;
+            } else if (target.includes(digit)) {
+                b++;
+            }
+        });
+        return {a, b};
     };
 
     const compareAnswer = () => {
         logger.info("Compare answer");
-        let a = 0, b = 0;
-        new Promise((resolve) => {
-            if (!checkInputs()) {
-                logger.info("Invalid input");
-                noticeWording("請輸入 4 個'不重複'的數字", 1500);
-            } else {
-                count.current++;
-                num.split('').map((digit, index) => {
-                    if (digit === target[index]) {
-                        a++;
-                    } else if (target.includes(digit)) {
-                        b++;
-                    }
-                });
-                const _res = `${num.split('').join(' ')}:${a} A ${b} B`;
-                dispatch(setRecord(_res));
-                logger.verbose(`Current result ${_res}`);
-                saveCurrentRecord(_res);
-                if (a === 4) {
-                    logger.info("Winning");
-                    noticeWording(`遊戲獲勝! 一共花了 ${count.current} 步。`);
-                    setIsWin(true);
-                    setInputEditable(false);
-                    dispatch(setAlertVisible(true));
-
-                    const playingHistory = storage.getStorage('playingHistory');
-                    if (playingHistory) storage.setStorage('playingHistory', playingHistory+","+count.current);
-                    else storage.setStorage('playingHistory', count.current);
-
-                    let currentHistory = Array(0);
-                    storage.getStorage('playingHistory').split(',').map(str => {
-                        currentHistory.push(Number(str));
-                    });
-                    if (currentHistory.length !== 0) {
-                        const v = Math.min(...currentHistory).toString();
-                        logger.info(`HighestScore: ${v}`);
-                        dispatch(setHighestScore(v));
-                    }
-                    removeCurrentRecord();
-                }
+        if (!checkInputs(num)) {
+            logger.info("Invalid input");
+            noticeWording("請輸入 4 個'不重複'的數字", 1500);
+        } else {
+            count.current++;
+            const {a, b} = calculateAB(num);
+            const _res = `${num.split('').join(' ')}:${a} A ${b} B`;
+            setRecord([...record, _res]);
+            logger.verbose(`Current result ${_res}`);
+            saveCurrentRecord(_res);
+            if (a === 4) {
+                logger.info("Winning");
+                noticeWording(`遊戲獲勝! 一共花了 ${count.current} 步。`);
+                setIsWin(true);
             }
-            resolve();
-        }).then(() => {
-            setNum("");
-        });
+        }
+        setNum("");
     };
 
-    const newRound = () => {
+    const handleOverlayClick = () => {
+        setAlertVisible(false);
+    }
+
+    const newRound = useCallback(() => {
         logger.info("New round");
         setTarget(shuffleArray(baseNumbers).slice(0, 4).join(''));
-    };
+    }, []);
 
     return(
-        <div className="container">
-            <Notification/>
-            <div ref={overlayRef} id="overlay">
-                <Alert
-                    isWin={isWin}
-                    msg={{
-                        "header": "遊戲獲勝",
-                        "content": `一共花了 ${count.current} 步。`
-                    }}
-                    bgColor="#f3ebb6"
-                    actionName="重新一局" action={() => newRound()}
-                />
+        <div className="container-main">
+            <div ref={overlayRef} id="overlay" onClick={handleOverlayClick}>
+                { isWin && <Alert action={() => newRound()} isAlertVisible={isAlertVisible}/> }
             </div>
-            <div className="rule-block">
-                <span className="rules">
-                    {RULES.map((rule, index) => {
-                        return (<span key={index}>{rule}</span>);
-                    })}
-                </span>
-            </div>
+            <div className="rule-block"><InfoBlock text={RULES}/></div>
             <div className="input-block">
                 <input type="number"
                        value={num}
@@ -206,7 +179,7 @@ const MainPage = () => {
                 <i className="enter" onClick={() => compareAnswer()}><GrReturn/></i>
             </div>
             <div className="currentHighestScore">
-                <Player/> {"，您目前最快步數：" + highestScore }
+                {"您目前最快步數：" + highestScore }
                 <a className="clearStorage" onClick={() => {
                     if (window.confirm('確定要清除遊玩紀錄?')) {
                         logger.info("Remove playing record");
@@ -215,11 +188,9 @@ const MainPage = () => {
                     }
                 }}>清除紀錄</a>
             </div>
-            <div className="button-area">
-                <button onClick={() => newRound()} id="Generate" >重新開始 <VscDebugRestart style = {{transform: 'translateY(2px)'}}/></button>
-            </div>
-            <div className="notice-block">{notice}</div>
-            <div className="record-block"><Record/></div>
+            <div className="button-area"><RestartBtn onClick={() => newRound()} value={"重新開始"}/></div>
+            <div className="notice-block"><Notice text={notice}/></div>
+            <div className="record-block"><Record record={record}/></div>
         </div>
     );
 };
