@@ -29,14 +29,19 @@ const RULES = [
 ];
 
 const baseNumbers = [...Array(10).keys()];
-let initTarget = null, initRecord = [];
+let initTarget = null, initRecord = [], initWinningStep = 0;
 const currentTarget = storage.getStorage('currentTarget');
 if (currentTarget) initTarget = currentTarget;
 else initTarget = shuffleArray(baseNumbers).slice(0, 4).join('');
 logger.verbose(`Init target number: ${initTarget}`);
+
 const currentRecord = storage.getStorage('currentRecord');
 if (currentRecord) initRecord = currentRecord.split(",");
 logger.verbose(`Init record: ${initRecord}`);
+
+const currentWinningStep = storage.getStorage('currentWinningStep');
+if (currentWinningStep) initWinningStep = currentWinningStep.split(",");
+logger.verbose(`Init step: ${initWinningStep}`);
 
 const MainPage = () => {
     const dispatch = useDispatch();
@@ -51,7 +56,7 @@ const MainPage = () => {
 
     const highestScore = useSelector(state => state.recordReducer.highestScore, shallowEqual);
 
-    const count = useRef(0);
+    const count = useRef(initWinningStep);
     const isMounted = useRef(false);
     let overlayRef = useRef(null);
 
@@ -140,6 +145,7 @@ const MainPage = () => {
             setRecord([...record, _res]);
             logger.verbose(`Current result ${_res}`);
             saveCurrentRecord(_res);
+            storage.setStorage("currentWinningStep", count.current);
             if (a === 4) {
                 logger.info("Winning");
                 noticeWording(`遊戲獲勝! 一共花了 ${count.current} 步。`);
