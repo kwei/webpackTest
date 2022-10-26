@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 30%;
+  max-width: 30%;
+  min-width: 350px;
   align-items: center;
   background: rgba(255, 255, 255, 0.77);
   border-radius: 16px;
@@ -41,8 +42,8 @@ input[type=number] {
 }
 
 .rule-block {
-  width: 470px;
-  max-width: 95%;
+  min-width: 290px;
+  max-width: 80%;
   border: 2px solid black;
   margin: 30px 0 10px 0;
   padding: 8px;
@@ -54,7 +55,7 @@ input[type=number] {
 }
 
 .info {
-  width: inherit;
+  width: 100%;
   word-wrap: break-word;
 }
 
@@ -138,6 +139,7 @@ input[type=number] {
   padding: 5px;
   max-height: 340px;
   overflow: auto;
+  margin: 0 0 10px 0;
 }
 
 .record-block::-webkit-scrollbar { display: none;}
