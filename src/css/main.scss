@@ -41,6 +41,21 @@ input[type=number] {
   }
 }
 
+.goBack {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  color: #b2b2b2;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 0 0 5px;
+  &:hover {
+    color: #2c2c2c;
+    padding: 0;
+  }
+}
+
 .rule-block {
   min-width: 290px;
   max-width: 80%;

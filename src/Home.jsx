@@ -20,6 +20,7 @@ const loadPage = (pageID) => {
     if (pageID === "/") return <OpeningPageV2/>;
     else if (pageID === "/local") return <MainPage/>;
     else if (pageID === "/party") return <PartyPage/>;
+    else if (pageID === "/loading") return <Loader/>;
     // return <Loader/>;
 }
 
