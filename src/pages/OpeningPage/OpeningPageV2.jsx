@@ -2,8 +2,10 @@ import '../../css/opening_v2.scss';
 import React, { useRef, useState } from "react";
 import { Logger } from "../../module/logger";
 import { switchPage } from "./openingPageSlice";
-import { FaMousePointer } from "react-icons/fa";
-import { TiArrowBackOutline, TiTickOutline, TiUserOutline, TiKeyOutline } from "react-icons/ti";
+import { FiLink } from "react-icons/fi";
+import { TiUserOutline, TiKeyOutline } from "react-icons/ti";
+import { GoArrowRight, GoArrowLeft } from "react-icons/go";
+import { VscDebugDisconnect } from "react-icons/vsc";
 import { useDispatch } from "react-redux";
 import { checkInputs } from "../../module/checkInputs";
 import { setUser } from "../../component/Player/userSlice";
@@ -82,7 +84,7 @@ const OpeningPageV2 = () => {
             return (
                 <>
                     <div className="userName">
-                        <div className="userName-input-label">名稱 <TiUserOutline style = {{transform: 'translateY(4px)', fontSize: "20px"}}/></div>
+                        <div className="userName-input-label">名稱 <TiUserOutline style = {{transform: 'translateX(2px)', fontSize: "20px"}}/></div>
                         <input type="text"
                                className="userName-input"
                                value={userName}
@@ -90,7 +92,7 @@ const OpeningPageV2 = () => {
                                placeholder={NAME_INPUT_PLACEHOLDER} />
                     </div>
                     <div className="roomID">
-                        <div className="roomID-input-label">代碼 <TiKeyOutline style = {{transform: 'translateY(4px)', fontSize: "20px"}}/></div>
+                        <div className="roomID-input-label">代碼 <TiKeyOutline style = {{transform: 'translateX(2px)', fontSize: "20px"}}/></div>
                         <input type="text"
                                className="roomID-input"
                                value={id}
@@ -111,25 +113,28 @@ const OpeningPageV2 = () => {
     return (
         <div className={"container-opening"}>
             <div className={"opening-page"}>
+                {(gameMode !== "") && <div className={"goBack"} onClick={handleBackBtnClick}>
+                    <GoArrowLeft style={{transform: 'translateX(0)', fontSize: "15px", color: "gray"}}/> 回到選單
+                </div>}
                 <div className={"page-header"}>幾 A 幾 B</div>
                 <div className={"page-content"}>
                     <div ref={localBtnRef} className={"start-local-btn"} onClick={handleLocalBtnClick}>
-                        離線模式 <FaMousePointer style = {{transform: 'rotate(-30deg)'}}/>
+                        離線模式 <VscDebugDisconnect style = {{transform: 'rotate(0deg) translateY(2px)', fontSize: "17px"}}/>
                     </div>
                     <div ref={partyBtnRef} className={"start-party-btn"} onClick={handlePartyBtnClick}>
-                        派對模式 <FaMousePointer style = {{transform: 'rotate(-30deg)'}}/>
+                        派對模式 <FiLink style = {{transform: 'rotate(0deg) translateY(2px)', fontSize: "14px"}}/>
                     </div>
                     {(gameMode !== "") && <div className={"form"}>
                         {formSheet()}
                         <div className={"btn-block"}>
                             <div className={"back-btn"} onClick={handleBackBtnClick}>
                                 <div className={"temp-container"}>
-                                    返回 <TiArrowBackOutline style = {{transform: 'translateX(2px)', fontSize: "20px"}}/>
+                                    <GoArrowLeft style = {{transform: 'translateX(-2px)', fontSize: "25px"}}/> 取消
                                 </div>
                             </div>
                             <div ref={confirmBtnRef} className={"confirm-btn"} onClick={handleConfirmBtnClick}>
                                 <div className={"temp-container"}>
-                                    確認 <TiTickOutline style = {{transform: 'translateX(2px)', fontSize: "20px"}}/>
+                                    確認 <GoArrowRight style = {{transform: 'translateX(2px)', fontSize: "25px"}}/>
                                 </div>
                             </div>
                         </div>
