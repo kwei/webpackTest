@@ -29,11 +29,14 @@ const RULES = [
 ];
 
 const baseNumbers = [...Array(10).keys()];
-let initTarget = null;
+let initTarget = null, initRecord = [];
 const currentTarget = storage.getStorage('currentTarget');
 if (currentTarget) initTarget = currentTarget;
 else initTarget = shuffleArray(baseNumbers).slice(0, 4).join('');
 logger.verbose(`Init target number: ${initTarget}`);
+const currentRecord = storage.getStorage('currentRecord');
+if (currentRecord) initRecord = currentRecord.split(",");
+logger.verbose(`Init record: ${initRecord}`);
 
 const MainPage = () => {
     const dispatch = useDispatch();
@@ -44,7 +47,7 @@ const MainPage = () => {
     const [isAlertVisible, setAlertVisible] = useState(false);
     const [inputEditable, setInputEditable] = useState(true);
     const [target, setTarget] = useState(initTarget);
-    const [record, setRecord] = useState([]);
+    const [record, setRecord] = useState(initRecord);
 
     const highestScore = useSelector(state => state.recordReducer.highestScore, shallowEqual);
 
