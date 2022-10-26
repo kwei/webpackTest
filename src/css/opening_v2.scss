@@ -33,7 +33,7 @@
   padding: 8px;
   /* From https://css.glass */
   background: rgba(255, 255, 255, 0.77);
-  border-radius: 16px;
+  border-radius: 0.5em;
   box-shadow: 0 4px 30px rgba(86, 86, 86, 0.1), 0 2px 15px rgba(112, 112, 112, 0.3);
   backdrop-filter: blur(5.6px);
   -webkit-backdrop-filter: blur(5.6px);
@@ -57,7 +57,7 @@
       margin: 20px 0 5px 0;
       padding: 5px;
       cursor: pointer;
-      border-radius: 5px;
+      border-radius: 0.3em;
       border: 1px solid #04364b;
       background-color: #36a4d3;
       text-align: center;
@@ -74,7 +74,7 @@
       margin: 10px 0 15px 0;
       padding: 5px;
       cursor: pointer;
-      border-radius: 5px;
+      border-radius: 0.3em;
       border: 1px solid #053616;
       background-color: #44d271;
       text-align: center;
@@ -108,7 +108,7 @@
           cursor: pointer;
           font-weight: bold;
           color: rgb(148, 148, 148);
-          border-radius: 2px;
+          border-radius: 0.5em;
         }
         .confirm-btn {
           margin: auto;
@@ -117,7 +117,7 @@
           cursor: pointer;
           font-weight: bold;
           color: rgb(92, 203, 73);
-          border-radius: 2px;
+          border-radius: 0.5em;
         }
       }
     }
@@ -170,7 +170,7 @@
   flex-direction: row;
   align-items: center;
   padding: 8px 10px;
-  border-radius: 8px;
+  border-radius: 0.5em;
   &:hover {
     padding: 6px 10px 10px 10px;
   }

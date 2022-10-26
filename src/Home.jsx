@@ -8,9 +8,19 @@ import { Logger } from "./module/logger";
  * Use <Suspense/> to handle the fallback, such as a loading component;
  * Use <ErrorBoundary> to handle error rendering React.lazy() component.
  ***/
-const MainPage = React.lazy(() => import(/* webpackChunkName: "MainPage" */"./pages/MainPage/MainPage.jsx"));
-const PartyPage = React.lazy(() => import(/* webpackChunkName: "PartyPage" */"./pages/PartyPage/PartyPage.jsx"));
-const OpeningPageV2 = React.lazy(() => import(/* webpackChunkName: "OpeningPageV2" */"./pages/OpeningPage/OpeningPageV2.jsx"));
+const MainPage = React.lazy(() => {
+    return Promise.all([
+        import(/* webpackChunkName: "MainPage" */"./pages/MainPage/MainPage.jsx"),
+        new Promise(resolve => setTimeout(resolve, 1000))
+    ]).then(([moduleExports]) => moduleExports);
+});
+const PartyPage = React.lazy(() => {
+    return Promise.all([
+        import(/* webpackChunkName: "PartyPage" */"./pages/PartyPage/PartyPage.jsx"),
+        new Promise(resolve => setTimeout(resolve, 1000))
+    ]).then(([moduleExports]) => moduleExports);
+});
+import OpeningPageV2 from "./pages/OpeningPage/OpeningPageV2.jsx";
 import Loader from "./component/Loader/Loader.jsx";
 import ErrorBoundary from "./component/ErrorBoundary/ErrorBoundary.jsx";
 
@@ -20,7 +30,6 @@ const loadPage = (pageID) => {
     if (pageID === "/") return <OpeningPageV2/>;
     else if (pageID === "/local") return <MainPage/>;
     else if (pageID === "/party") return <PartyPage/>;
-    else if (pageID === "/loading") return <Loader/>;
     // return <Loader/>;
 }
 

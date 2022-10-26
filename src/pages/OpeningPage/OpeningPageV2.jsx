@@ -58,8 +58,7 @@ const OpeningPageV2 = () => {
                 dispatch(setRole("host"));
             }
             dispatch(setUser(_name));
-            enterRoom("/loading");
-            setTimeout(() => enterRoom("/"+gameMode), 1000);
+            enterRoom("/"+gameMode);
         } else {
             noticeWording("只能輸入數字", 1500);
         }

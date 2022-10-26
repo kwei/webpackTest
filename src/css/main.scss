@@ -6,7 +6,7 @@
   min-width: 350px;
   align-items: center;
   background: rgba(255, 255, 255, 0.77);
-  border-radius: 16px;
+  border-radius: 0.5em;
   box-shadow: 0 4px 30px rgba(86, 86, 86, 0.1), 0 2px 15px rgba(112, 112, 112, 0.3);
   backdrop-filter: blur(5.6px);
   -webkit-backdrop-filter: blur(5.6px);
@@ -17,52 +17,13 @@
   }
 }
 
-input {
-  margin: 0;
-  border-radius: 10px;
-  padding: 10px 15px;
-  border-color: #000000;
-  width: 100%;
-  &:hover {
-
-  }
-}
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
-  margin: 0;
-  width: 100%;
-  border-radius: 10px;
-  padding: 10px 15px;
-  border-color: #000000;
-  &:hover {
-
-  }
-}
-
-.goBack {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: auto;
-  color: #b2b2b2;
-  cursor: pointer;
-  font-size: 12px;
-  padding: 0 0 0 5px;
-  &:hover {
-    color: #2c2c2c;
-    padding: 0;
-  }
-}
-
 .rule-block {
   min-width: 290px;
   max-width: 80%;
   border: 2px solid black;
   margin: 30px 0 10px 0;
   padding: 8px;
-  border-radius: 4px;
+  border-radius: 0.5em;
   box-shadow: rgba(0, 0, 0, 0.16) 0 3px 6px, rgba(0, 0, 0, 0.23) 0 3px 6px;
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.19) 0 10px 20px, rgba(0, 0, 0, 0.23) 0 6px 6px;
@@ -126,7 +87,7 @@ input[type=number] {
 }
 
 #Generate {
-  border-radius: 3px;
+  border-radius: 0.5em;
   padding: 8px;
   background-color: #dcdcdc;
   border: 2px solid black;
@@ -215,7 +176,7 @@ input[type=number] {
   background-color: #333333;
   color: #ffffff;
   text-align: center;
-  border-radius: 25px;
+  border-radius: 0.8em;
   padding: 8px;
   position: fixed;
   z-index: 1;
@@ -294,7 +255,7 @@ input[type=number] {
   height: inherit;
   margin: auto;
   padding: 8px;
-  border-radius: 4px;
+  border-radius: 0.5em;
   border: 2px solid black;
   animation: popup 0.5s;
   &.close {
@@ -328,7 +289,7 @@ input[type=number] {
 }
 
 .next-round-btn {
-  border-radius: 4px;
+  border-radius: 0.5em;
   background-color: #ffffff;
   cursor: pointer;
   &:hover {
