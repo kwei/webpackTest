@@ -3,20 +3,14 @@ import React, {useCallback, useEffect, useRef, useState} from "react";
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
 import { GrReturn } from "react-icons/gr";
 
-/***
- * https://blog.logrocket.com/lazy-loading-components-in-react-16-6-6cea535c0b52/
- * Use React.lazy() to dynamically import components;
- * Use <Suspense/> to handle the fallback, such as a loading component;
- * Use <ErrorBoundary> to handle error rendering React.lazy() component.
- ***/
-const Record = React.lazy(() => import("../../component/Record/Record.jsx"));
-const Notice = React.lazy(() => import("../../component/Notice/Notice.jsx"));
-const InfoBlock = React.lazy(() => import("../../component/InfoBlock/InfoBlock.jsx"));
-const Alert = React.lazy(() => import("../../component/Alert/Alert.jsx"));
-const RestartBtn = React.lazy(() => import("../../component/Button/RestartBtn.jsx"));
-
 import { setHighestScore, resetHighestScore } from "../../component/Record/recordSlice";
 import { setWinningStep } from "../../component/Alert/alertSlice";
+
+import Record from "../../component/Record/Record.jsx";
+import Notice from "../../component/Notice/Notice.jsx";
+import InfoBlock from "../../component/InfoBlock/InfoBlock.jsx";
+import Alert from "../../component/Alert/Alert.jsx";
+import RestartBtn from "../../component/Button/RestartBtn.jsx";
 
 import { Storage } from "../../module/storage";
 import { Logger } from "../../module/logger";
