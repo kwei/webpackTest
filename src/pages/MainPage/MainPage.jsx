@@ -130,7 +130,7 @@ const MainPage = () => {
 
     const compareAnswer = () => {
         logger.info("Compare answer");
-        if (!checkInputs(num)) {
+        if (!checkInputs(num) || [...new Set(num)].length < 4) {
             logger.info("Invalid input");
             noticeWording("請輸入 4 個'不重複'的數字", 1500);
         } else {
