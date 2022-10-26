@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkwebpacktest=self.webpackChunkwebpacktest||[]).push([[190],{5190:(e,t,s)=>{s.r(t),s.d(t,{default:()=>u});var c=function(e){return e.text};const u=s(7294).memo(c)}}]);
