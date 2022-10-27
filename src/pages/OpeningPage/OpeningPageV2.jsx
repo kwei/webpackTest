@@ -28,8 +28,12 @@ const OpeningPageV2 = () => {
     const partyBtnRef = useRef(null);
     const confirmBtnRef = useRef(null);
 
+    let initUserName = "";
+    const playerName = storage.getStorage(env.LOCAL.STORAGE.PLAYER_NAME);
+    if (playerName && playerName !== "") initUserName = playerName;
+
     const dispatch = useDispatch();
-    const [userName, setUserName] = useState("");
+    const [userName, setUserName] = useState(initUserName);
     const [id, setId] = useState("");
     const [wording, setWording] = useState("");
 

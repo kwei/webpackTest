@@ -1,6 +1,6 @@
 import '../../css/main.scss';
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { GrReturn } from "react-icons/gr";
 
 import { setWinningStep } from "../../component/Alert/alertSlice";
@@ -24,27 +24,22 @@ const logger = Logger({className: "MainPage"});
 const NUM_INPUT_PLACEHOLDER = formatWording("general.local.inputNumber.placeHolder", {});
 const RULES = env.GAME.RULE;
 
-const { initTarget, initRecord, initStep, initIsWinning, initPlayingHistory, initHighestScore, initAverageScore } = storage.loadAll({
-    initTarget: shuffleArray(env.GAME.NUMBER_RANGE).slice(0, 4).join(''),
-    initRecord: [],
-    initStep: 0,
-    initIsWinning: false,
-    initPlayingHistory: "",
-    initHighestScore: formatWording("general.default.score", {}),
-    initAverageScore: 0
-});
-
-logger.verbose(`Init target         : ${initTarget}`);
-logger.verbose(`Init record         : ${initRecord}`);
-logger.verbose(`Init count          : ${initStep}`);
-logger.verbose(`Init isWin          : ${initIsWinning}`);
-logger.verbose(`Init highestScore   : ${initHighestScore}`);
-logger.verbose(`Init playingHistory : ${initPlayingHistory}`);
-logger.verbose(`Init averageScore   : ${initAverageScore}`);
+const initStorage = () => {
+    return storage.loadAll({
+        initTarget: shuffleArray(env.GAME.NUMBER_RANGE).slice(0, 4).join(''),
+        initRecord: [],
+        initStep: 0,
+        initIsWinning: false,
+        initPlayingHistory: "",
+        initHighestScore: formatWording("general.default.score", {}),
+        initAverageScore: 0
+    });
+};
 
 const MainPage = () => {
     const dispatch = useDispatch();
-
+    const pageID = useSelector(state => state.openingPageReducer.pageID, shallowEqual);
+    const { initTarget, initRecord, initStep, initIsWinning, initPlayingHistory, initHighestScore, initAverageScore } = initStorage();
     const [notice, setNotice] = useState("");
     const [num, setNum] = useState("");
     const [isAlertVisible, setAlertVisible] = useState(false);
@@ -59,7 +54,7 @@ const MainPage = () => {
     const count = useRef(initStep);
     const isMounted = useRef(false);
     const inputRef = useRef(null);
-    let overlayRef = useRef(null);
+    const overlayRef = useRef(null);
 
     useEffect(() => {
         if (isMounted.current) {
@@ -110,7 +105,7 @@ const MainPage = () => {
                 temp = temp.map(str => Number(str));
                 temp = temp.reduce((partialSum, a) => partialSum + a, count.current);
                 avg = temp / (length+1);
-                avg = Math.round(avg);
+                avg = Math.floor(avg);
             }
             setAverageScore(avg);
         }
