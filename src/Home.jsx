@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 
 /***
  * https://blog.logrocket.com/lazy-loading-components-in-react-16-6-6cea535c0b52/
@@ -29,13 +29,13 @@ const Home = () => {
     return (
         <ErrorBoundary fallback={<p>{formatWording("error.load.page", {})}</p>}>
             <Suspense fallback={<Loader/>}>
-                <BrowserRouter>
+                <HashRouter>
                     <Routes>
                         <Route path="/local" element={<MainPage/>}/>
                         <Route path="/party" element={<PartyPage/>}/>
                         <Route path="/" element={<OpeningPageV2/>}/>
                     </Routes>
-                </BrowserRouter>
+                </HashRouter>
             </Suspense>
         </ErrorBoundary>
     );
