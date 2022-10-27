@@ -36,7 +36,7 @@ export const Storage =() => {
         if (currentStep !== null) initStep = Number(currentStep);
         else setStorage(env.LOCAL.STORAGE.CURRENT_STEP, initStep);
 
-        if (currentIsWinning !== null) initIsWinning = currentIsWinning === "false"? false : true;
+        if (currentIsWinning !== null) initIsWinning = currentIsWinning !== "false";
         else setStorage(env.LOCAL.STORAGE.IS_WINNING, initIsWinning);
 
         if (currentPlayingHistory !== null) initPlayingHistory = currentPlayingHistory;

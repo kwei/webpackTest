@@ -63,18 +63,23 @@ const MainPage = () => {
 
     useEffect(() => {
         if (isMounted.current) {
-            resetStates();
-            noticeWording(formatWording("general.newRound", {}), 1500);
-            logger.verbose(`New target number: ${target}`);
             storage.saveAll({
                 currentTarget: target,
-                currentRecord: [],
-                currentStep: 0,
-                currentIsWinning: false,
+                currentRecord: record.join(","),
+                currentStep: count.current,
+                currentIsWinning: isWin,
                 currentPlayingHistory: playingHistory,
                 currentHighestScore: highestScore,
                 currentAverageScore: averageScore
             });
+        }
+    }, [target, record, isWin, playingHistory, highestScore, averageScore]);
+
+    useEffect(() => {
+        if (isMounted.current) {
+            resetStates();
+            noticeWording(formatWording("general.newRound", {}), 1500);
+            logger.verbose(`New target number: ${target}`);
         }
     }, [target]);
 
@@ -90,7 +95,7 @@ const MainPage = () => {
             setAlertVisible(true);
             dispatch(setWinningStep(count.current));
 
-            let currentPlayingHistory = count.current;
+            let currentPlayingHistory = ""+count.current;
             if (playingHistory !== "") currentPlayingHistory = playingHistory+","+count.current
             setPlayingHistory(currentPlayingHistory);
 
@@ -98,22 +103,16 @@ const MainPage = () => {
             if (highestScore === formatWording("general.default.score", {}) || count.current < Number(highestScore)) currentHighestScore = count.current;
             setHighestScore(currentHighestScore);
 
-            let avg;
-            const temp = playingHistory.split(",");
-            if (temp.length > 0) avg = (temp.map(str => Number(str)).reduce((partialSum, a) => partialSum + a, 0) + count.current) / (temp.length+1);
-            else avg = count.current;
-            avg = Math.round(avg);
+            let avg = count.current;
+            let temp = currentPlayingHistory.split(",");
+            const length = temp.length;
+            if (length > 0) {
+                temp = temp.map(str => Number(str));
+                temp = temp.reduce((partialSum, a) => partialSum + a, count.current);
+                avg = temp / (length+1);
+                avg = Math.round(avg);
+            }
             setAverageScore(avg);
-
-            storage.saveAll({
-                currentTarget: target,
-                currentRecord: record.join(","),
-                currentStep: count.current,
-                currentIsWinning: isWin,
-                currentPlayingHistory: currentPlayingHistory,
-                currentHighestScore: currentHighestScore,
-                currentAverageScore: avg
-            });
         }
     }, [isWin]);
 
@@ -165,15 +164,6 @@ const MainPage = () => {
             setRecord([...record, _res]);
             logger.verbose(`Current result ${_res}`);
 
-            storage.saveAll({
-                currentTarget: target,
-                currentRecord: [...record, _res].join(","),
-                currentStep: count.current,
-                isWinning: isWin ,
-                currentPlayingHistory: playingHistory,
-                currentHighestScore: highestScore,
-                currentAverageScore: averageScore
-            });
             if (a === 4) {
                 logger.info("Winning");
                 noticeWording(formatWording("alert.local.win", {count: count.current}));
