@@ -24,13 +24,14 @@ const logger = Logger({className: "MainPage"});
 const NUM_INPUT_PLACEHOLDER = formatWording("general.local.inputNumber.placeHolder", {});
 const RULES = env.GAME.RULE;
 
-const { initTarget, initRecord, initStep, initIsWinning, initPlayingHistory, initHighestScore } = storage.loadAll({
+const { initTarget, initRecord, initStep, initIsWinning, initPlayingHistory, initHighestScore, initAverageScore } = storage.loadAll({
     initTarget: shuffleArray(env.GAME.NUMBER_RANGE).slice(0, 4).join(''),
     initRecord: [],
     initStep: 0,
     initIsWinning: false,
     initPlayingHistory: "",
     initHighestScore: formatWording("general.default.score", {}),
+    initAverageScore: 0
 });
 
 logger.verbose(`Init target         : ${initTarget}`);
@@ -39,6 +40,7 @@ logger.verbose(`Init count          : ${initStep}`);
 logger.verbose(`Init isWin          : ${initIsWinning}`);
 logger.verbose(`Init highestScore   : ${initHighestScore}`);
 logger.verbose(`Init playingHistory : ${initPlayingHistory}`);
+logger.verbose(`Init averageScore   : ${initAverageScore}`);
 
 const MainPage = () => {
     const dispatch = useDispatch();
@@ -46,12 +48,13 @@ const MainPage = () => {
     const [notice, setNotice] = useState("");
     const [num, setNum] = useState("");
     const [isAlertVisible, setAlertVisible] = useState(false);
-    const [inputEditable, setInputEditable] = useState(true);
+    const [inputEditable, setInputEditable] = useState(!initIsWinning);
     const [isWin, setIsWin] = useState(initIsWinning);
     const [target, setTarget] = useState(initTarget);
     const [record, setRecord] = useState(initRecord);
     const [highestScore, setHighestScore] = useState(initHighestScore);
     const [playingHistory, setPlayingHistory] = useState(initPlayingHistory);
+    const [averageScore, setAverageScore] = useState(initAverageScore);
 
     const count = useRef(initStep);
     const isMounted = useRef(false);
@@ -67,34 +70,54 @@ const MainPage = () => {
                 currentTarget: target,
                 currentRecord: [],
                 currentStep: 0,
-                isWinning: false ,
+                currentIsWinning: false,
                 currentPlayingHistory: playingHistory,
-                currentHighestScore: highestScore
+                currentHighestScore: highestScore,
+                currentAverageScore: averageScore
             });
         }
-        isMounted.current = true;
     }, [target]);
 
     useEffect(() => {
         if (isMounted.current) {
             overlayRef.current.style.display = isAlertVisible ? "block" : "none";
         }
-        isMounted.current = true;
     }, [isAlertVisible]);
 
     useEffect(() => {
-        if (isWin) {
+        if (isMounted.current && isWin) {
             setInputEditable(false);
             setAlertVisible(true);
             dispatch(setWinningStep(count.current));
-            if (playingHistory !== "") setPlayingHistory(playingHistory+","+count.current);
-            else setPlayingHistory(count.current);
-            if (highestScore === formatWording("general.default.score", {}) || count.current < Number(highestScore)) {
-                setHighestScore(count.current);
-                storage.setStorage(env.LOCAL.STORAGE.CURRENT_HIGHEST_SCORE, count.current);
-            }
+
+            let currentPlayingHistory = count.current;
+            if (playingHistory !== "") currentPlayingHistory = playingHistory+","+count.current
+            setPlayingHistory(currentPlayingHistory);
+
+            let currentHighestScore = highestScore;
+            if (highestScore === formatWording("general.default.score", {}) || count.current < Number(highestScore)) currentHighestScore = count.current;
+            setHighestScore(currentHighestScore);
+
+            let avg;
+            const temp = playingHistory.split(",");
+            if (temp.length > 0) avg = (temp.map(str => Number(str)).reduce((partialSum, a) => partialSum + a, 0) + count.current) / (temp.length+1);
+            else avg = count.current;
+            avg = Math.round(avg);
+            setAverageScore(avg);
+
+            storage.saveAll({
+                currentTarget: target,
+                currentRecord: record.join(","),
+                currentStep: count.current,
+                currentIsWinning: isWin,
+                currentPlayingHistory: currentPlayingHistory,
+                currentHighestScore: currentHighestScore,
+                currentAverageScore: avg
+            });
         }
     }, [isWin]);
+
+    useEffect(() => {isMounted.current = true}, []);
 
     const noticeWording = (str, timeout = 0) => {
         logger.info(`Notice: ${str}`);
@@ -130,6 +153,7 @@ const MainPage = () => {
     };
 
     const compareAnswer = () => {
+        if (isWin) return;
         logger.info("Compare answer");
         if (!checkInputs(num) || [...new Set(num)].length < 4) {
             logger.info("Invalid input");
@@ -147,7 +171,8 @@ const MainPage = () => {
                 currentStep: count.current,
                 isWinning: isWin ,
                 currentPlayingHistory: playingHistory,
-                currentHighestScore: highestScore
+                currentHighestScore: highestScore,
+                currentAverageScore: averageScore
             });
             if (a === 4) {
                 logger.info("Winning");
@@ -184,16 +209,19 @@ const MainPage = () => {
                            if (event.key === 'Enter') compareAnswer();
                        }}
                        placeholder={NUM_INPUT_PLACEHOLDER} />
-                <i className="enter" onClick={() => compareAnswer()}><GrReturn/></i>
+                <i className="enter" onClick={compareAnswer}><GrReturn/></i>
             </div>
             <div className="currentHighestScore">
-                { formatWording("general.bestStep", {count: highestScore}) }
+                { formatWording("general.local.step", {count: highestScore, avg: averageScore? averageScore: formatWording("general.default.score", {})}) }
                 <a className="clearStorage" onClick={() => {
                     if (window.confirm(formatWording("alert.local.clean.playingHistory", {}))) {
                         logger.info("Remove playing record");
                         storage.setStorage(env.LOCAL.STORAGE.PLAYING_HISTORY, "");
-                        storage.setStorage(env.LOCAL.STORAGE.CURRENT_HIGHEST_SCORE, formatWording("general.default.score", {}))
+                        storage.setStorage(env.LOCAL.STORAGE.CURRENT_HIGHEST_SCORE, formatWording("general.default.score", {}));
+                        storage.setStorage(env.LOCAL.STORAGE.AVERAGE_SCORE, 0);
                         setHighestScore(formatWording("general.default.score", {}));
+                        setPlayingHistory("");
+                        setAverageScore(0);
                     }
                 }}>{formatWording("general.clean.playingHistory", {})}</a>
             </div>

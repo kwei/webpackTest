@@ -1,10 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import classNames from "classnames";
-import { setAlertVisible } from "../../component/Alert/alertSlice";
-import {useSelector, useDispatch, shallowEqual} from "react-redux";
 
 const MiddleAlert = (props) => {
-    const dispatch = useDispatch();
     const data = props.data;
     const bgColor = props.bgColor;
     const handleOnclick = props.action;

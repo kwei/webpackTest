@@ -1,6 +1,7 @@
 import '../../css/opening_v2.scss';
 import React, { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate  } from "react-router-dom";
 
 import { FiLink } from "react-icons/fi";
 import { TiUserOutline, TiKeyOutline } from "react-icons/ti";
@@ -15,12 +16,13 @@ import { checkInputs } from "../../module/checkInputs";
 import { Storage } from "../../module/storage";
 import { Logger } from "../../module/logger";
 import { env } from "../../../env";
+import { formatWording } from "../../../utils/langUtils";
 const logger = Logger({className: "OpeningPage"});
+const storage = Storage();
 
-const NAME_INPUT_PLACEHOLDER = "請輸入欲顯示之名稱";
-const ROOM_INPUT_PLACEHOLDER = "請輸入派對房間代碼";
 
 const OpeningPageV2 = () => {
+    const navigate = useNavigate();
     const [gameMode, setGameMode] = useState("");
     const localBtnRef = useRef(null);
     const partyBtnRef = useRef(null);
@@ -52,7 +54,7 @@ const OpeningPageV2 = () => {
     const handleConfirmBtnClick = () => {
         logger.success(`Start with ${gameMode} mode!`);
         if (checkInputs(id)) {
-            let _name = "匿名玩家";
+            let _name = formatWording("general.default.playerName", {});
             if (userName !== "") _name = userName;
             if (id !== "") {
                 dispatch(setRoom(id));
@@ -63,11 +65,12 @@ const OpeningPageV2 = () => {
                 dispatch(setRole("host"));
             }
             dispatch(setUser(_name));
-            Storage.setStorage(env.LOCAL.STORAGE.PLAYER_NAME, _name);
-            Storage.setStorage(env.LOCAL.STORAGE.ROOM_ID, id);
+            storage.setStorage(env.LOCAL.STORAGE.PLAYER_NAME, _name);
+            storage.setStorage(env.LOCAL.STORAGE.ROOM_ID, id);
+            navigate("/"+gameMode);
             enterRoom("/"+gameMode);
         } else {
-            noticeWording("只能輸入數字", 1500);
+            noticeWording(formatWording("error.invalid.inputRoom", {}), 1500);
         }
     };
 
@@ -84,12 +87,14 @@ const OpeningPageV2 = () => {
             return (
                 <>
                     <div className="userName">
-                        <div className="userName-input-label">名稱 <TiUserOutline style = {{transform: 'translateX(2px)', fontSize: "20px"}}/></div>
+                        <div className="userName-input-label">
+                            {formatWording("general.opening.inputName.label", {})} <TiUserOutline style = {{transform: 'translateX(2px)', fontSize: "20px"}}/>
+                        </div>
                         <input type="text"
                                className="userName-input"
                                value={userName}
                                onChange={(event) => setUserName(event.target.value)}
-                               placeholder={NAME_INPUT_PLACEHOLDER} />
+                               placeholder={formatWording("general.opening.inputName.placeHolder", {})} />
                     </div>
                 </>
             );
@@ -97,25 +102,29 @@ const OpeningPageV2 = () => {
             return (
                 <>
                     <div className="userName">
-                        <div className="userName-input-label">名稱 <TiUserOutline style = {{transform: 'translateX(2px)', fontSize: "20px"}}/></div>
+                        <div className="userName-input-label">
+                            {formatWording("general.opening.inputName.label", {})} <TiUserOutline style = {{transform: 'translateX(2px)', fontSize: "20px"}}/>
+                        </div>
                         <input type="text"
                                className="userName-input"
                                value={userName}
                                onChange={(event) => setUserName(event.target.value)}
-                               placeholder={NAME_INPUT_PLACEHOLDER} />
+                               placeholder={formatWording("general.opening.inputName.placeHolder", {})} />
                     </div>
                     <div className="roomID">
-                        <div className="roomID-input-label">代碼 <TiKeyOutline style = {{transform: 'translateX(2px)', fontSize: "20px"}}/></div>
+                        <div className="roomID-input-label">
+                            {formatWording("general.opening.inputRoom.label", {})} <TiKeyOutline style = {{transform: 'translateX(2px)', fontSize: "20px"}}/>
+                        </div>
                         <input type="text"
                                className="roomID-input"
                                value={id}
                                onKeyDown={(event) => {
                                    if (event.key === "Enter" && !checkInputs(id)) {
-                                       noticeWording("只能輸入數字", 1500);
+                                       noticeWording(formatWording("error.invalid.inputRoom", {}), 1500);
                                    }
                                }}
                                onChange={(event) => setId(event.target.value.slice(0, 9))}
-                               placeholder={ROOM_INPUT_PLACEHOLDER} />
+                               placeholder={formatWording("general.opening.inputRoom.placeHolder", {})} />
                     </div>
                 </>
             );
@@ -127,27 +136,27 @@ const OpeningPageV2 = () => {
         <div className={"container-opening"}>
             <div className={"opening-page"}>
                 {(gameMode !== "") && <div className={"goBack"} onClick={handleBackBtnClick}>
-                    <GoArrowLeft style={{transform: 'translateX(0)', fontSize: "15px", color: "gray"}}/> 回到選單
+                    <GoArrowLeft style={{transform: 'translateX(0)', fontSize: "15px", color: "gray"}}/> {formatWording("general.goBack.menu", {})}
                 </div>}
-                <div className={"page-header"}>幾 A 幾 B</div>
+                <div className={"page-header"}>{formatWording("general.title", {})}</div>
                 <div className={"page-content"}>
                     <div ref={localBtnRef} className={"start-local-btn"} onClick={handleLocalBtnClick}>
-                        離線模式 <VscDebugDisconnect style = {{transform: 'rotate(0deg) translateY(2px)', fontSize: "17px"}}/>
+                        {formatWording("general.btn.localMode", {})} <VscDebugDisconnect style = {{transform: 'rotate(0deg) translateY(2px)', fontSize: "17px"}}/>
                     </div>
                     <div ref={partyBtnRef} className={"start-party-btn"} onClick={handlePartyBtnClick}>
-                        派對模式 <FiLink style = {{transform: 'rotate(0deg) translateY(2px)', fontSize: "14px"}}/>
+                        {formatWording("general.btn.partyMode", {})} <FiLink style = {{transform: 'rotate(0deg) translateY(2px)', fontSize: "14px"}}/>
                     </div>
                     {(gameMode !== "") && <div className={"form"}>
                         {formSheet()}
                         <div className={"btn-block"}>
                             <div className={"back-btn"} onClick={handleBackBtnClick}>
                                 <div className={"temp-container"}>
-                                    <GoArrowLeft style = {{transform: 'translateX(-2px)', fontSize: "25px"}}/> 取消
+                                    <GoArrowLeft style = {{transform: 'translateX(-2px)', fontSize: "25px"}}/> {formatWording("general.btn.cancel", {})}
                                 </div>
                             </div>
                             <div ref={confirmBtnRef} className={"confirm-btn"} onClick={handleConfirmBtnClick}>
                                 <div className={"temp-container"}>
-                                    確認 <GoArrowRight style = {{transform: 'translateX(2px)', fontSize: "25px"}}/>
+                                    {formatWording("general.btn.confirm", {})} <GoArrowRight style = {{transform: 'translateX(2px)', fontSize: "25px"}}/>
                                 </div>
                             </div>
                         </div>

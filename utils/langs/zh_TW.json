@@ -2,7 +2,7 @@
     "general.local.inputNumber.placeHolder": "請輸入 4 個不重複的數字",
     "general.opening.inputName.placeHolder": "請輸入欲顯示之名稱",
     "general.opening.inputRoom.placeHolder": "請輸入派對房間代碼",
-    "general.bestStep": "您目前最快步數： {count}",
+    "general.local.step": "您目前最快步數： {count}，平均: {avg}",
     "general.restart": "重新開始",
     "general.newRound": "新的一局!",
     "general.title": "幾 A 幾 B",
@@ -19,6 +19,7 @@
     "alert.local.clean.playingHistory": "確定要清除遊玩紀錄?",
     "error.invalid.inputNumber": "請輸入 4 個'不重複'的數字",
     "error.invalid.inputRoom": "只能輸入數字",
+    "error.load.page": "頁面載入失敗",
     "alert.local.win": "遊戲獲勝! 一共花了 {count} 步。",
     "alert.local.title": "遊戲獲勝",
     "alert.local.content": "一共花了 {count} 步"

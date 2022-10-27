@@ -1,6 +1,5 @@
 import React, { Suspense } from "react";
-import { shallowEqual, useSelector } from "react-redux";
-import { Logger } from "./module/logger";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 /***
  * https://blog.logrocket.com/lazy-loading-components-in-react-16-6-6cea535c0b52/
@@ -24,22 +23,19 @@ import OpeningPageV2 from "./pages/OpeningPage/OpeningPageV2.jsx";
 import Loader from "./component/Loader/Loader.jsx";
 import ErrorBoundary from "./component/ErrorBoundary/ErrorBoundary.jsx";
 
-const logger = Logger({className: "OpeningPage"});
-
-const loadPage = (pageID) => {
-    if (pageID === "/") return <OpeningPageV2/>;
-    else if (pageID === "/local") return <MainPage/>;
-    else if (pageID === "/party") return <PartyPage/>;
-    // return <Loader/>;
-}
+import { formatWording } from "../utils/langUtils";
 
 const Home = () => {
-    const pageID = useSelector(state => state.openingPageReducer.pageID, shallowEqual);
-    logger.info(`pageID update to ${pageID}`);
     return (
-        <ErrorBoundary fallback={<p>Failed to load page.</p>}>
+        <ErrorBoundary fallback={<p>{formatWording("error.load.page", {})}</p>}>
             <Suspense fallback={<Loader/>}>
-                {loadPage(pageID)}
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/local" element={<MainPage/>}/>
+                        <Route path="/party" element={<PartyPage/>}/>
+                        <Route path="/" element={<OpeningPageV2/>}/>
+                    </Routes>
+                </BrowserRouter>
             </Suspense>
         </ErrorBoundary>
     );

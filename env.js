@@ -10,6 +10,7 @@ export const env =  {
             CURRENT_RECORD: "currentRecord",
             CURRENT_STEP: "currentStep",
             CURRENT_HIGHEST_SCORE: "currentHighestScore",
+            AVERAGE_SCORE: "averageScore",
             IS_WINNING: "isWinning",
             PLAYING_HISTORY: "playingHistory",
             PLAYER_NAME: "playerName",
