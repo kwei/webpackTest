@@ -1,9 +1,8 @@
 import '../../css/main.scss';
-import React, {useCallback, useEffect, useRef, useState} from "react";
-import { shallowEqual, useSelector, useDispatch } from "react-redux";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { GrReturn } from "react-icons/gr";
 
-import { setHighestScore, resetHighestScore } from "../../component/Record/recordSlice";
 import { setWinningStep } from "../../component/Alert/alertSlice";
 
 import Record from "../../component/Record/Record.jsx";
@@ -16,57 +15,62 @@ import { Storage } from "../../module/storage";
 import { Logger } from "../../module/logger";
 import { shuffleArray } from "../../module/shuffleArray";
 import { checkInputs } from "../../module/checkInputs";
+import { env } from '../../../env.js';
+import { formatWording } from "../../../utils/langUtils";
 
 const storage = Storage();
 const logger = Logger({className: "MainPage"});
 
-const NUM_INPUT_PLACEHOLDER = "請輸入 4 個不重複的數字";
-const RULES = [
-    "這是幾 A 幾 B 的小遊戲，請輸入 4 個不重複的數字，從 0 到 9。",
-    "程式會自動產生隨機題目，若輸入的數字與題目相對應位置的數字相符，則會得到 A；",
-    "若輸入的數字與題目不同位置的數字相符，則會得到 B。",
-    "目標為獲得 4A。"
-];
+const NUM_INPUT_PLACEHOLDER = formatWording("general.local.inputNumber.placeHolder", {});
+const RULES = env.GAME.RULE;
 
-const baseNumbers = [...Array(10).keys()];
-let initTarget = null, initRecord = [], initWinningStep = 0;
-const currentTarget = storage.getStorage('currentTarget');
-if (currentTarget) initTarget = currentTarget;
-else initTarget = shuffleArray(baseNumbers).slice(0, 4).join('');
-logger.verbose(`Init target number: ${initTarget}`);
+const { initTarget, initRecord, initStep, initIsWinning, initPlayingHistory, initHighestScore } = storage.loadAll({
+    initTarget: shuffleArray(env.GAME.NUMBER_RANGE).slice(0, 4).join(''),
+    initRecord: [],
+    initStep: 0,
+    initIsWinning: false,
+    initPlayingHistory: "",
+    initHighestScore: formatWording("general.default.score", {}),
+});
 
-const currentRecord = storage.getStorage('currentRecord');
-if (currentRecord) initRecord = currentRecord.split(",");
-logger.verbose(`Init record: ${initRecord}`);
-
-const currentWinningStep = storage.getStorage('currentWinningStep');
-if (currentWinningStep) initWinningStep = currentWinningStep.split(",");
-logger.verbose(`Init step: ${initWinningStep}`);
+logger.verbose(`Init target         : ${initTarget}`);
+logger.verbose(`Init record         : ${initRecord}`);
+logger.verbose(`Init count          : ${initStep}`);
+logger.verbose(`Init isWin          : ${initIsWinning}`);
+logger.verbose(`Init highestScore   : ${initHighestScore}`);
+logger.verbose(`Init playingHistory : ${initPlayingHistory}`);
 
 const MainPage = () => {
     const dispatch = useDispatch();
 
     const [notice, setNotice] = useState("");
     const [num, setNum] = useState("");
-    const [isWin, setIsWin] = useState(false);
     const [isAlertVisible, setAlertVisible] = useState(false);
     const [inputEditable, setInputEditable] = useState(true);
+    const [isWin, setIsWin] = useState(initIsWinning);
     const [target, setTarget] = useState(initTarget);
     const [record, setRecord] = useState(initRecord);
+    const [highestScore, setHighestScore] = useState(initHighestScore);
+    const [playingHistory, setPlayingHistory] = useState(initPlayingHistory);
 
-    const highestScore = useSelector(state => state.recordReducer.highestScore, shallowEqual);
-
-    const count = useRef(initWinningStep);
+    const count = useRef(initStep);
     const isMounted = useRef(false);
     const inputRef = useRef(null);
     let overlayRef = useRef(null);
 
     useEffect(() => {
         if (isMounted.current) {
-            resetStates()
-            noticeWording("新的一局!", 1500);
+            resetStates();
+            noticeWording(formatWording("general.newRound", {}), 1500);
             logger.verbose(`New target number: ${target}`);
-            storage.setStorage('currentTarget', target);
+            storage.saveAll({
+                currentTarget: target,
+                currentRecord: [],
+                currentStep: 0,
+                isWinning: false ,
+                currentPlayingHistory: playingHistory,
+                currentHighestScore: highestScore
+            });
         }
         isMounted.current = true;
     }, [target]);
@@ -83,13 +87,12 @@ const MainPage = () => {
             setInputEditable(false);
             setAlertVisible(true);
             dispatch(setWinningStep(count.current));
-
-            const playingHistory = storage.getStorage('playingHistory');
-            if (playingHistory) storage.setStorage('playingHistory', playingHistory+","+count.current);
-            else storage.setStorage('playingHistory', count.current);
-
-            const currentHistory = storage.getStorage('playingHistory').split(',').map(str => Number(str));
-            if (currentHistory.length !== 0) dispatch(setHighestScore(Math.min(...currentHistory).toString()));
+            if (playingHistory !== "") setPlayingHistory(playingHistory+","+count.current);
+            else setPlayingHistory(count.current);
+            if (highestScore === formatWording("general.default.score", {}) || count.current < Number(highestScore)) {
+                setHighestScore(count.current);
+                storage.setStorage(env.LOCAL.STORAGE.CURRENT_HIGHEST_SCORE, count.current);
+            }
         }
     }, [isWin]);
 
@@ -112,14 +115,6 @@ const MainPage = () => {
         setRecord([]);
         setAlertVisible(false);
         count.current = 0;
-        storage.removeStorage('currentRecord');
-        storage.removeStorage('currentTarget');
-    };
-
-    const saveCurrentRecord = (record) => {
-        const currentRecord = storage.getStorage('currentRecord');
-        if (currentRecord) storage.setStorage('currentRecord', currentRecord+","+record);
-        else storage.setStorage('currentRecord', record);
     };
 
     const calculateAB = (num) => {
@@ -138,18 +133,25 @@ const MainPage = () => {
         logger.info("Compare answer");
         if (!checkInputs(num) || [...new Set(num)].length < 4) {
             logger.info("Invalid input");
-            noticeWording("請輸入 4 個'不重複'的數字", 1500);
+            noticeWording(formatWording("error.invalid.inputNumber", {}), 1500);
         } else {
             count.current++;
             const {a, b} = calculateAB(num);
             const _res = `${num.split('').join(' ')}:${a} A ${b} B`;
             setRecord([...record, _res]);
             logger.verbose(`Current result ${_res}`);
-            saveCurrentRecord(_res);
-            storage.setStorage("currentWinningStep", count.current);
+
+            storage.saveAll({
+                currentTarget: target,
+                currentRecord: [...record, _res].join(","),
+                currentStep: count.current,
+                isWinning: isWin ,
+                currentPlayingHistory: playingHistory,
+                currentHighestScore: highestScore
+            });
             if (a === 4) {
                 logger.info("Winning");
-                noticeWording(`遊戲獲勝! 一共花了 ${count.current} 步。`);
+                noticeWording(formatWording("alert.local.win", {count: count.current}));
                 setIsWin(true);
             }
         }
@@ -163,7 +165,7 @@ const MainPage = () => {
 
     const newRound = useCallback(() => {
         logger.info("New round");
-        setTarget(shuffleArray(baseNumbers).slice(0, 4).join(''));
+        setTarget(shuffleArray(env.GAME.NUMBER_RANGE).slice(0, 4).join(''));
     }, []);
 
     return(
@@ -185,16 +187,17 @@ const MainPage = () => {
                 <i className="enter" onClick={() => compareAnswer()}><GrReturn/></i>
             </div>
             <div className="currentHighestScore">
-                {"您目前最快步數：" + highestScore }
+                { formatWording("general.bestStep", {count: highestScore}) }
                 <a className="clearStorage" onClick={() => {
-                    if (window.confirm('確定要清除遊玩紀錄?')) {
+                    if (window.confirm(formatWording("alert.local.clean.playingHistory", {}))) {
                         logger.info("Remove playing record");
-                        storage.removeStorage("playingHistory");
-                        dispatch(resetHighestScore(undefined));
+                        storage.setStorage(env.LOCAL.STORAGE.PLAYING_HISTORY, "");
+                        storage.setStorage(env.LOCAL.STORAGE.CURRENT_HIGHEST_SCORE, formatWording("general.default.score", {}))
+                        setHighestScore(formatWording("general.default.score", {}));
                     }
-                }}>清除紀錄</a>
+                }}>{formatWording("general.clean.playingHistory", {})}</a>
             </div>
-            <div className="button-area"><RestartBtn onClick={() => newRound()} value={"重新開始"}/></div>
+            <div className="button-area"><RestartBtn onClick={() => newRound()} value={formatWording("general.restart", {})}/></div>
             <div className="notice-block"><Notice text={notice}/></div>
             <div className="record-block"><Record record={record}/></div>
         </div>

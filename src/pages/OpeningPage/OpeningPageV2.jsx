@@ -1,15 +1,20 @@
 import '../../css/opening_v2.scss';
 import React, { useRef, useState } from "react";
-import { Logger } from "../../module/logger";
-import { switchPage } from "./openingPageSlice";
+import { useDispatch } from "react-redux";
+
 import { FiLink } from "react-icons/fi";
 import { TiUserOutline, TiKeyOutline } from "react-icons/ti";
 import { GoArrowRight, GoArrowLeft } from "react-icons/go";
 import { VscDebugDisconnect } from "react-icons/vsc";
-import { useDispatch } from "react-redux";
-import { checkInputs } from "../../module/checkInputs";
+
 import { setUser } from "../../component/Player/userSlice";
 import { setRoom, setRole } from "../PartyPage/partyPageSlice";
+import { switchPage } from "./openingPageSlice";
+
+import { checkInputs } from "../../module/checkInputs";
+import { Storage } from "../../module/storage";
+import { Logger } from "../../module/logger";
+import { env } from "../../../env";
 const logger = Logger({className: "OpeningPage"});
 
 const NAME_INPUT_PLACEHOLDER = "請輸入欲顯示之名稱";
@@ -58,6 +63,8 @@ const OpeningPageV2 = () => {
                 dispatch(setRole("host"));
             }
             dispatch(setUser(_name));
+            Storage.setStorage(env.LOCAL.STORAGE.PLAYER_NAME, _name);
+            Storage.setStorage(env.LOCAL.STORAGE.ROOM_ID, id);
             enterRoom("/"+gameMode);
         } else {
             noticeWording("只能輸入數字", 1500);
@@ -76,7 +83,14 @@ const OpeningPageV2 = () => {
         if (gameMode === "local") {
             return (
                 <>
-                    離線模式為個人遊玩模式，目標在於追求高分並嘗試超越自己。
+                    <div className="userName">
+                        <div className="userName-input-label">名稱 <TiUserOutline style = {{transform: 'translateX(2px)', fontSize: "20px"}}/></div>
+                        <input type="text"
+                               className="userName-input"
+                               value={userName}
+                               onChange={(event) => setUserName(event.target.value)}
+                               placeholder={NAME_INPUT_PLACEHOLDER} />
+                    </div>
                 </>
             );
         } else if (gameMode === "party") {
