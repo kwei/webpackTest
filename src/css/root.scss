@@ -1,6 +1,15 @@
+html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
 body {
   overflow: auto;
   font-family: arial,'Microsoft JhengHei','微軟正黑體',sans-serif !important;
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -15,6 +24,8 @@ input::-webkit-inner-spin-button {
   align-items: center;
   height: 100%;
   width: 100%;
+  justify-content: center;
+  background-color: #e2ff0052;
 }
 
 input {
