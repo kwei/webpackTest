@@ -1,6 +1,6 @@
 import '../../css/main.scss';
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { GrReturn } from "react-icons/gr";
 
 import { setWinningStep } from "../../component/Alert/alertSlice";
@@ -38,7 +38,6 @@ const initStorage = () => {
 
 const MainPage = () => {
     const dispatch = useDispatch();
-    const pageID = useSelector(state => state.openingPageReducer.pageID, shallowEqual);
     const { initTarget, initRecord, initStep, initIsWinning, initPlayingHistory, initHighestScore, initAverageScore } = initStorage();
     const [notice, setNotice] = useState("");
     const [num, setNum] = useState("");

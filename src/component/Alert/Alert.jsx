@@ -13,7 +13,6 @@ const Alert = (props) => {
                     "header": "遊戲獲勝",
                     "content": `一共花了 ${winningStep} 步。`
                 }}
-                bgColor="#f3ebb6"
                 actionName="重新一局"
                 isAlertVisible={isAlertVisible}
                 action={props.action}

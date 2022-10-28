@@ -10,7 +10,6 @@ import { VscDebugDisconnect } from "react-icons/vsc";
 
 import { setUser } from "../../component/Player/userSlice";
 import { setRoom, setRole } from "../PartyPage/partyPageSlice";
-import { switchPage } from "./openingPageSlice";
 
 import { checkInputs } from "../../module/checkInputs";
 import { Storage } from "../../module/storage";
@@ -72,7 +71,6 @@ const OpeningPageV2 = () => {
             storage.setStorage(env.LOCAL.STORAGE.PLAYER_NAME, _name);
             storage.setStorage(env.LOCAL.STORAGE.ROOM_ID, id);
             navigate("/"+gameMode);
-            enterRoom("/"+gameMode);
         } else {
             noticeWording(formatWording("error.invalid.inputRoom", {}), 1500);
         }
@@ -83,8 +81,6 @@ const OpeningPageV2 = () => {
         setWording(str);
         if (timeout) setTimeout(() => setWording(''), timeout);
     };
-
-    const enterRoom = (type) => dispatch(switchPage(type));
 
     const formSheet = () => {
         if (gameMode === "local") {

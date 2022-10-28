@@ -257,10 +257,6 @@
   padding: 8px;
   border-radius: 0.5em;
   border: 2px solid black;
-  animation: popup 0.5s;
-  &.close {
-    display: none;
-  }
 }
 
 .alert-header {
