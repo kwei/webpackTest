@@ -11,10 +11,6 @@
   backdrop-filter: blur(5.6px);
   -webkit-backdrop-filter: blur(5.6px);
   border: 1px solid rgba(255, 255, 255, 1);
-  &.darken {
-    background-color: black;
-    opacity: 0.5;
-  }
 }
 
 .rule-block {
@@ -249,7 +245,7 @@
 
 .alert-block {
   z-index: 999;
-  background-color: #ffffff;
+  background-color: #b4fdff;
   display: flex;
   flex-direction: column;
   height: inherit;
@@ -261,17 +257,18 @@
 
 .alert-header {
   width: auto;
-  height: 15px;
-  padding: 2px 5px 12px 5px;
+  height: auto;
+  padding: 5px;
   color: #363636;
-  border-bottom: 1px solid #5e5e5e;
+  border-bottom: 2px solid #5e5e5e;
   text-align: center;
 }
 
 .alert-content {
   width: auto;
+  height: auto;
   margin: 10px 0 10px 0;
-  padding: 5px 18px 5px 18px;
+  padding: 5px;
   word-wrap: break-word;
   text-align: center;
 }
@@ -279,17 +276,20 @@
 .alert-footer {
   width: auto;
   height: auto;
-  padding: 2px 5px;
+  padding: 5px;
   text-align: center;
-  margin: 10px 0 0 0;
+  margin: 5px 0 0 0;
 }
 
 .next-round-btn {
   border-radius: 0.5em;
-  background-color: #ffffff;
+  border: 1px solid black;
+  padding: 5px 10px;
+  background-color: #b4fdff;
   cursor: pointer;
+  color: black;
   &:hover {
-    background-color: #dcdcdc;
+    background-color: #a5e7e8;
   }
 }
 
@@ -303,6 +303,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 0.5em;
   z-index: 2;
 }
