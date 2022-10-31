@@ -5,10 +5,9 @@ const MiddleAlert = (props) => {
     const data = props.data;
     const handleOnclick = props.action;
     const actionName = props.actionName;
-    const isAlertVisible = props.isAlertVisible;
 
     const { xy } = useSpring({
-        xy: isAlertVisible? 1: 0 ,
+        xy: 1 ,
         config: { duration: 500 },
     });
 

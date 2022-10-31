@@ -53,7 +53,6 @@ const MainPage = () => {
     const count = useRef(initStep);
     const isMounted = useRef(false);
     const inputRef = useRef(null);
-    const overlayRef = useRef(null);
 
     useEffect(() => {
         if (isMounted.current) {
@@ -76,12 +75,6 @@ const MainPage = () => {
             logger.verbose(`New target number: ${target}`);
         }
     }, [target]);
-
-    useEffect(() => {
-        if (isMounted.current) {
-            overlayRef.current.style.display = isAlertVisible ? "block" : "none";
-        }
-    }, [isAlertVisible]);
 
     useEffect(() => {
         if (isMounted.current && isWin) {
@@ -168,9 +161,9 @@ const MainPage = () => {
         inputRef.current.focus();
     };
 
-    const handleOverlayClick = () => {
+    const handleOverlayClick = useCallback(() => {
         setAlertVisible(false);
-    }
+    }, []);
 
     const newRound = useCallback(() => {
         logger.info("New round");
@@ -179,9 +172,7 @@ const MainPage = () => {
 
     return(
         <div className="container-main">
-            <div ref={overlayRef} id="overlay" onClick={handleOverlayClick}>
-                { isWin && <Alert action={() => newRound()} isAlertVisible={isAlertVisible}/> }
-            </div>
+            <Alert onClick={handleOverlayClick} portalTarget={document.body} action={() => newRound()} isAlertVisible={isAlertVisible}/>
             <div className="rule-block"><InfoBlock text={RULES}/></div>
             <div className="input-block">
                 <input type="number"
