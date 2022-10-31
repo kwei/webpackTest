@@ -3,12 +3,12 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { GrReturn } from "react-icons/gr";
 
-import { setWinningStep } from "../../component/Alert/alertSlice";
+import { setWinningStep } from "../../component/Modal/modalSlice";
 
 import Record from "../../component/Record/Record.jsx";
 import Notice from "../../component/Notice/Notice.jsx";
 import InfoBlock from "../../component/InfoBlock/InfoBlock.jsx";
-import Alert from "../../component/Alert/Alert.jsx";
+import Alert from "../../component/Modal/Modal.jsx";
 import RestartBtn from "../../component/Button/RestartBtn.jsx";
 
 import { Storage } from "../../module/storage";
@@ -172,7 +172,14 @@ const MainPage = () => {
 
     return(
         <div className="container-main">
-            <Alert onClick={handleOverlayClick} portalTarget={document.body} action={() => newRound()} isAlertVisible={isAlertVisible}/>
+            <Alert
+                portalTarget={document.body}
+                alertType={"winning"}
+                action={{
+                    confirm: () => newRound(),
+                    cancel: () => handleOverlayClick()
+                }}
+                isAlertVisible={isAlertVisible}/>
             <div className="rule-block"><InfoBlock text={RULES}/></div>
             <div className="input-block">
                 <input type="number"

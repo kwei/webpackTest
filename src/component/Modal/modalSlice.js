@@ -5,7 +5,7 @@ const defaultState = {
     winningStep: "",
 };
 
-export const alertSlice = createSlice({
+export const modalSlice = createSlice({
     name: 'alert',
     initialState: defaultState,
     reducers: {
@@ -28,5 +28,5 @@ export const alertSlice = createSlice({
     }
 });
 
-export const { setAlertVisible, setWinningStep } = alertSlice.actions;
-export default alertSlice.reducer;
+export const { setAlertVisible, setWinningStep } = modalSlice.actions;
+export default modalSlice.reducer;

@@ -44,7 +44,7 @@ const OpeningPageV2 = () => {
 
     const handlePartyBtnClick = () => {
         logger.success(`Start with party mode!`);
-        if (checkInputs(id)) {
+        if (checkInputs(id) && [...new Set(id)].length === 9) {
             let _name = formatWording("general.default.playerName", {});
             if (userName !== "") _name = userName;
             if (id !== "") {
@@ -93,11 +93,6 @@ const OpeningPageV2 = () => {
                         type="text"
                         className="roomID-input"
                         value={id}
-                        onKeyDown={(event) => {
-                            if (event.key === "Enter" && !checkInputs(id)) {
-                                noticeWording(formatWording("error.invalid.inputRoom", {}), 1500);
-                            }
-                        }}
                         onChange={(event) => setId(event.target.value.slice(0, 9))}
                         placeholder={formatWording("general.opening.inputRoom.placeHolder", {})}
                     />

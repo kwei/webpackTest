@@ -55,9 +55,9 @@
         background-color: #36a4d3;
         text-align: center;
         font-weight: bold;
-        box-shadow: rgba(0, 0, 0, 0.16) 0 1px 4px;
         &:hover {
           background-color: #87ccea;
+          box-shadow: rgba(54, 164, 211, 0.4) 0 0 20px;
         }
       }
       .start-party-btn {
@@ -71,9 +71,9 @@
         background-color: #44d271;
         text-align: center;
         font-weight: bold;
-        box-shadow: rgba(0, 0, 0, 0.16) 0 1px 4px;
         &:hover {
           background-color: #7eeaa1;
+          box-shadow: rgba(68, 210, 113, 0.4) 0 0 20px;
         }
       }
     }

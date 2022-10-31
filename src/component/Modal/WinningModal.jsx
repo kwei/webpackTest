@@ -1,9 +1,9 @@
 import React from "react";
 import { useSpring, animated } from "@react-spring/web";
 
-const MiddleAlert = (props) => {
+const WinningModal = (props) => {
     const data = props.data;
-    const handleOnclick = props.action;
+    const handleOnclick = props.action.confirm;
     const actionName = props.actionName;
 
     const { xy } = useSpring({
@@ -31,4 +31,4 @@ const MiddleAlert = (props) => {
     );
 };
 
-export default React.memo(MiddleAlert);
+export default React.memo(WinningModal);
