@@ -2,7 +2,7 @@ import WinningModal from "./WinningModal.jsx";
 import React, { useRef } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import { createPortal } from "react-dom";
-
+import { useSpring, animated } from "@react-spring/web";
 
 const Modal = (props) => {
     const winningStep = useSelector(state => state.alertReducer.winningStep, shallowEqual);
@@ -11,6 +11,11 @@ const Modal = (props) => {
     const handleOverlayClick = props.action.cancel;
     const overlayRef = useRef(null);
     const alertType = props.alertType;
+
+    const { xy } = useSpring({
+        xy: isAlertVisible? 1 : 0 ,
+        config: { duration: 300 },
+    });
 
     const alertComponent = () => {
         if (alertType === "winning") {
@@ -31,16 +36,21 @@ const Modal = (props) => {
 
     return(
         isAlertVisible?
-        createPortal(<>
-            {isAlertVisible &&
-                <div ref={overlayRef} id="overlay" onClick={handleOverlayClick}>
-                    <div className="modal-alert">
-                        { alertComponent() }
-                    </div>
-                </div>
-            }
-        </>, portalTarget) : null
+        createPortal(
+            <div ref={overlayRef} id="overlay" onClick={handleOverlayClick}>
+                <animated.div className="modal-alert" style={{
+                    transform: xy
+                        .to({
+                            range:  [0, 0.05, 0.3, 0.5, 0.8 , 1],
+                            output: [1, 1.2 , 1  , 0.9, 1.1 , 1],
+                        })
+                        .to(xy => `scale(${xy})`),
+                }}>
+                    { alertComponent() }
+                </animated.div>
+            </div>
+            , portalTarget) : null
     );
 };
 
-export default React.memo(Modal);
+export default Modal;

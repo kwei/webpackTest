@@ -8,7 +8,7 @@ import { setWinningStep } from "../../component/Modal/modalSlice";
 import Record from "../../component/Record/Record.jsx";
 import Notice from "../../component/Notice/Notice.jsx";
 import InfoBlock from "../../component/InfoBlock/InfoBlock.jsx";
-import Alert from "../../component/Modal/Modal.jsx";
+import Modal from "../../component/Modal/Modal.jsx";
 import RestartBtn from "../../component/Button/RestartBtn.jsx";
 
 import { Storage } from "../../module/storage";
@@ -172,9 +172,9 @@ const MainPage = () => {
 
     return(
         <div className="container-main">
-            <Alert
+            <Modal
                 portalTarget={document.body}
-                alertType={"winning"}
+                alertType="winning"
                 action={{
                     confirm: () => newRound(),
                     cancel: () => handleOverlayClick()
